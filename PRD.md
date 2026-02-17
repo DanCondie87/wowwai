@@ -330,13 +330,13 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to filter the board by project, assignee, tags, priority, and blocked status so that I can focus.
 
 **Acceptance Criteria:**
-- [ ] Filter bar above the board with: project dropdown, assignee toggle (Dan/Dali/All), priority multi-select, tag multi-select, "Show blocked only" toggle
-- [ ] Filters apply to all columns simultaneously
-- [ ] Active filter count shown as badge on filter bar
-- [ ] "Clear filters" button resets all
-- [ ] Filter state persisted in URL query params (shareable/bookmarkable)
-- [ ] On mobile: filter bar collapses to a "Filter" button that opens a bottom sheet
-- [ ] Typecheck passes
+- [x] Filter bar above the board with: project dropdown, assignee toggle (Dan/Dali/All), priority multi-select, tag multi-select, "Show blocked only" toggle
+- [x] Filters apply to all columns simultaneously
+- [x] Active filter count shown as badge on filter bar
+- [x] "Clear filters" button resets all
+- [x] Filter state persisted in URL query params (shareable/bookmarkable)
+- [x] On mobile: filter bar collapses to a "Filter" button that opens a bottom sheet
+- [x] Typecheck passes
 - [ ] Verify filtering works in browser
 
 ---

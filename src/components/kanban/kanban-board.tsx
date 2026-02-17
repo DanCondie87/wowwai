@@ -19,13 +19,6 @@ import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { COLUMNS, type TaskStatus } from "@/lib/columns";
 import { KanbanColumn } from "./kanban-column";
 import { TaskCard } from "./task-card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 interface KanbanBoardProps {
@@ -43,7 +36,6 @@ export function KanbanBoard({
   onAddTask,
   onCardClick,
 }: KanbanBoardProps) {
-  const [selectedProjectId, setSelectedProjectId] = useState<string>("all");
   const [activeColumnIndex, setActiveColumnIndex] = useState(0);
   const [activeTask, setActiveTask] = useState<Doc<"tasks"> | null>(null);
   const [overColumnId, setOverColumnId] = useState<string | null>(null);
@@ -60,28 +52,23 @@ export function KanbanBoard({
     })
   );
 
-  const filteredTasks =
-    selectedProjectId === "all"
-      ? tasks
-      : tasks.filter((t) => t.projectId === selectedProjectId);
-
   const tasksByStatus = useCallback(
     (status: TaskStatus) =>
-      filteredTasks
+      tasks
         .filter((t) => t.status === status && !t.parentTaskId)
         .sort((a, b) => a.position - b.position),
-    [filteredTasks]
+    [tasks]
   );
 
   const projectMap = new Map(projects.map((p) => [p._id, p]));
 
   function findColumnForTask(taskId: string): TaskStatus | null {
-    const task = filteredTasks.find((t) => t._id === taskId);
+    const task = tasks.find((t) => t._id === taskId);
     return task ? task.status : null;
   }
 
   function handleDragStart(event: DragStartEvent) {
-    const task = filteredTasks.find((t) => t._id === event.active.id);
+    const task = tasks.find((t) => t._id === event.active.id);
     if (task) setActiveTask(task);
   }
 
@@ -92,12 +79,10 @@ export function KanbanBoard({
       return;
     }
 
-    // Check if hovering over a column droppable
     const overData = over.data.current;
     if (overData?.type === "column") {
       setOverColumnId(overData.status as string);
     } else if (overData?.type === "task") {
-      // Hovering over a task — find which column it's in
       const col = findColumnForTask(over.id as string);
       setOverColumnId(col);
     }
@@ -120,7 +105,7 @@ export function KanbanBoard({
     if (overData?.type === "column") {
       targetColumn = overData.status as TaskStatus;
     } else if (overData?.type === "task") {
-      const targetTask = filteredTasks.find((t) => t._id === over.id);
+      const targetTask = tasks.find((t) => t._id === over.id);
       if (!targetTask) return;
       targetColumn = targetTask.status;
     } else {
@@ -130,7 +115,6 @@ export function KanbanBoard({
     const targetTasks = tasksByStatus(targetColumn);
 
     if (sourceColumn === targetColumn) {
-      // Reorder within same column
       const activeIndex = targetTasks.findIndex((t) => t._id === activeId);
       const overIndex = overData?.type === "task"
         ? targetTasks.findIndex((t) => t._id === over.id)
@@ -140,7 +124,6 @@ export function KanbanBoard({
         await reorder({ id: activeId, position: overIndex });
       }
     } else {
-      // Move to different column
       const overIndex = overData?.type === "task"
         ? targetTasks.findIndex((t) => t._id === over.id)
         : targetTasks.length;
@@ -163,29 +146,6 @@ export function KanbanBoard({
 
   return (
     <div className="flex h-full flex-col">
-      {/* Filter bar */}
-      <div className="flex items-center gap-3 border-b px-4 py-3">
-        <Select value={selectedProjectId} onValueChange={setSelectedProjectId}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="All Projects" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Projects</SelectItem>
-            {projects.map((p) => (
-              <SelectItem key={p._id} value={p._id}>
-                <div className="flex items-center gap-2">
-                  <span
-                    className="inline-block h-2.5 w-2.5 rounded-full"
-                    style={{ backgroundColor: p.color }}
-                  />
-                  {p.name}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
       {/* Mobile column tabs */}
       <div className="flex border-b lg:hidden overflow-x-auto">
         {COLUMNS.map((col, idx) => (
@@ -220,8 +180,8 @@ export function KanbanBoard({
             <KanbanColumn
               key={col.id}
               column={col}
-              tasks={filteredTasks.filter((t) => t.status === col.id).sort((a, b) => a.position - b.position)}
-              allTasks={filteredTasks}
+              tasks={tasks.filter((t) => t.status === col.id).sort((a, b) => a.position - b.position)}
+              allTasks={tasks}
               projects={projects}
               onAddTask={onAddTask}
               onCardClick={(id) => onCardClick?.(id as Id<"tasks">)}
@@ -234,10 +194,10 @@ export function KanbanBoard({
         <div className="flex-1 overflow-auto p-4 lg:hidden">
           <KanbanColumn
             column={COLUMNS[activeColumnIndex]}
-            tasks={filteredTasks
+            tasks={tasks
               .filter((t) => t.status === COLUMNS[activeColumnIndex].id)
               .sort((a, b) => a.position - b.position)}
-            allTasks={filteredTasks}
+            allTasks={tasks}
             projects={projects}
             onAddTask={onAddTask}
             onCardClick={(id) => onCardClick?.(id as Id<"tasks">)}
@@ -245,7 +205,7 @@ export function KanbanBoard({
           />
         </div>
 
-        {/* Drag overlay — shows ghost of card being dragged */}
+        {/* Drag overlay */}
         <DragOverlay>
           {activeTask && (
             <div className="rotate-2 opacity-90">

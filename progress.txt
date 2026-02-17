@@ -211,6 +211,16 @@
 - Colored pill display in both card-detail and task-card views
 - Typecheck passes
 
+## US-024: Board Filter Bar [DONE]
+- BoardFilterBar component: project dropdown, assignee toggle (All/Dan/Dali), priority multi-select, tag multi-select, "Blocked only" toggle
+- Filters apply to all columns simultaneously via pre-filtering in board page
+- Active filter count shown as badge
+- "Clear" button resets all filters
+- Filter state persisted in URL query params (?project=X&assignee=dan&priority=high,urgent&tags=ui,api&blocked=true)
+- Mobile: "Filters" button opens bottom Sheet with same controls
+- Removed old project-only filter from KanbanBoard; board now receives pre-filtered tasks
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
