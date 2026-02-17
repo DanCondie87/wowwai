@@ -352,6 +352,14 @@
 - Marks synced via POST /sync/markSynced endpoint
 - Typecheck passes
 
+## US-039: Sync Agent Process Management [DONE]
+- ecosystem.config.cjs: pm2 config with name "wowwai-sync", max_restarts: 10, restart_delay: 5000
+- npm scripts: start (pm2 start), stop (pm2 stop), logs (pm2 logs), dev (node --watch)
+- Heartbeat: logs "Heartbeat — running" every 60 seconds (configurable)
+- Graceful shutdown on SIGINT/SIGTERM: closes watcher, exits cleanly
+- README.md with full setup instructions: install, configure, start/stop/logs, how it works
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

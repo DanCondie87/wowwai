@@ -520,12 +520,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want the sync agent to run reliably as a background process.
 
 **Acceptance Criteria:**
-- [ ] `pm2` ecosystem file (`sync-agent/ecosystem.config.js`) configured to run the agent
-- [ ] `npm run start` in sync-agent starts via pm2
-- [ ] pm2 configured for auto-restart on crash (max 10 restarts)
-- [ ] Health check: agent logs a heartbeat every 60 seconds
-- [ ] README.md in sync-agent/ with setup instructions (install, configure, start, stop, logs)
-- [ ] Typecheck/lint passes
+- [x] `pm2` ecosystem file (`sync-agent/ecosystem.config.js`) configured to run the agent
+- [x] `npm run start` in sync-agent starts via pm2
+- [x] pm2 configured for auto-restart on crash (max 10 restarts)
+- [x] Health check: agent logs a heartbeat every 60 seconds
+- [x] README.md in sync-agent/ with setup instructions (install, configure, start, stop, logs)
+- [x] Typecheck/lint passes
 
 ---
 
