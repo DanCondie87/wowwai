@@ -405,6 +405,17 @@
 - getModelUsage: count of completed tasks by modelUsed field, sorted descending
 - Typecheck passes
 
+## US-045: Analytics Dashboard Page [DONE]
+- /analytics page with 4 metric cards in responsive 2-column grid
+- Card 1: Average Cycle Time — per-project days with completed count badges
+- Card 2: Weekly Throughput — recharts BarChart showing tasks/week for last 8 weeks
+- Card 3: Blocked Tasks — total count + per-project breakdown with task list
+- Card 4: Model Usage — recharts PieChart (120x120) with color legend
+- All colors use hsl(var(--...)) CSS variables — no hardcoded values
+- recharts already installed in package.json
+- Responsive: cards stack vertically on mobile
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
