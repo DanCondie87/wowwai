@@ -378,6 +378,16 @@
 - Outputs summary: "Created X projects, Y tasks"
 - Typecheck passes
 
+## US-042: WhatsApp Notification Helper [DONE]
+- lib/notifications.ts: notifyDan(message) sends WhatsApp via webhook, logs to console when disabled
+- formatBlockerNotification(cardId): "WOWWAI: {cardId} is blocked — needs your input"
+- formatSummaryNotification(taskCount): "WOWWAI: N task(s) need your input"
+- sanitizeMessage: strips URLs, file paths, code snippets, caps at 200 chars
+- Async, handles errors gracefully (logs but never throws)
+- WHATSAPP_WEBHOOK_URL and NOTIFICATIONS_ENABLED env vars
+- docs/notifications.md: full guide with usage examples, security rules, quiet hours, dev mode
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
