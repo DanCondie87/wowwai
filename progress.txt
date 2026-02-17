@@ -66,6 +66,15 @@
 - Task mutations (US-008) inline audit log creation for status changes, field updates, moves
 - Typecheck passes
 
+## US-003: Clerk Authentication [DONE]
+- ConvexProvider wraps the app in layout.tsx (dev mode without Clerk keys)
+- TODO comments mark where ConvexProviderWithClerk + ClerkProvider go
+- middleware.ts stub created (no-op, passes all requests through)
+- Sign-in page at /sign-in with placeholder (ready for Clerk <SignIn />)
+- Sign-up page at /sign-up with placeholder (ready for Clerk <SignUp />)
+- Auth routes under (auth) route group
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

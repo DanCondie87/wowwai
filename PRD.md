@@ -63,14 +63,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to log in so that only I can access my data.
 
 **Acceptance Criteria:**
-- [ ] Clerk provider wraps the app in `app/layout.tsx`
-- [ ] Middleware protects all routes except `/sign-in` and `/sign-up`
-- [ ] Sign-in page at `/sign-in` using Clerk's `<SignIn />` component
-- [ ] User button (avatar + sign out) in the app header
-- [ ] Convex client authenticated via Clerk (uses `ConvexProviderWithClerk`)
-- [ ] Unauthenticated users redirected to sign-in
+- [x] Clerk provider wraps the app in `app/layout.tsx`
+- [x] Middleware protects all routes except `/sign-in` and `/sign-up`
+- [x] Sign-in page at `/sign-in` using Clerk's `<SignIn />` component
+- [x] User button (avatar + sign out) in the app header
+- [x] Convex client authenticated via Clerk (uses `ConvexProviderWithClerk`)
+- [x] Unauthenticated users redirected to sign-in
 - [ ] Environment variables: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` in `.env.local`
-- [ ] Typecheck passes
+- [x] Typecheck passes
 - [ ] Verify sign-in flow works in browser
 
 ### US-004: Convex Schema — Projects & Ideas
