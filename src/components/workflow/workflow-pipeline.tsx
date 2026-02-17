@@ -24,6 +24,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DocumentReference } from "./document-reference";
 
 type WorkflowStep = Doc<"workflowSteps">;
 
@@ -133,19 +134,12 @@ function StepCard({ step, isInsideLoop }: { step: WorkflowStep; isInsideLoop?: b
           )}
 
           {step.references.length > 0 && (
-            <div className="space-y-1">
+            <div className="space-y-2">
               <span className="text-xs font-medium text-muted-foreground">
                 References
               </span>
               {step.references.map((ref, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-2 text-sm text-muted-foreground"
-                >
-                  <span>{ref.type === "claude_md" ? "\uD83D\uDCC4" : ref.type === "prompt_template" ? "\uD83D\uDCDD" : "\uD83D\uDCDA"}</span>
-                  <span>{ref.label}</span>
-                  <span className="text-xs opacity-60">({ref.filePath})</span>
-                </div>
+                <DocumentReference key={i} reference={ref} />
               ))}
             </div>
           )}

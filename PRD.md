@@ -451,12 +451,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see referenced documents in workflow steps so that I know what guides each step.
 
 **Acceptance Criteria:**
-- [ ] Each step's expanded view shows "References" section with listed documents
-- [ ] Each reference shows: type icon (📄 for claude_md, 📝 for prompt_template, 📚 for library), label, file path
-- [ ] [View] button on each reference: opens an inline expandable panel showing the file content (fetched from `fileVersions` table or loaded on demand)
-- [ ] Content rendered as markdown (using sanitized Markdown component from US-027)
-- [ ] If content not yet synced, show file path with "Not synced" indicator
-- [ ] Typecheck passes
+- [x] Each step's expanded view shows "References" section with listed documents
+- [x] Each reference shows: type icon (📄 for claude_md, 📝 for prompt_template, 📚 for library), label, file path
+- [x] [View] button on each reference: opens an inline expandable panel showing the file content (fetched from `fileVersions` table or loaded on demand)
+- [x] Content rendered as markdown (using sanitized Markdown component from US-027)
+- [x] If content not yet synced, show file path with "Not synced" indicator
+- [x] Typecheck passes
 - [ ] Verify reference display in browser
 
 ### US-035: Inline Document Editing

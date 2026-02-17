@@ -298,6 +298,15 @@
 - isLoopGroup() type guard distinguishes groups from individual steps
 - Typecheck passes
 
+## US-034: Document Reference Display [DONE]
+- DocumentReference component: shows type icon, label, file path, View/Edit buttons
+- View button opens Sheet panel showing file content from fileVersions table
+- Content rendered as markdown using rehype-sanitize Markdown component
+- "Not synced" indicator when no content in fileVersions
+- convex/fileVersions.ts: getByFilePath, getLatestByFilePath, createVersion, getVersionCount queries/mutations
+- convex/fileSyncQueue.ts: enqueue, getPending, updateStatus queries/mutations
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
