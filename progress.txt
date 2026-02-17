@@ -1,5 +1,14 @@
 # Progress Log
 
+## US-001: Project Scaffolding [DONE]
+- Next.js 16 + TypeScript + Tailwind CSS v4 + shadcn/ui already set up
+- Created missing directories: convex/, scripts/, docs/, src/hooks/
+- Created app route directories: board/, workflows/, analytics/, my-work/, settings/
+- 14 shadcn/ui components pre-installed
+- .gitignore updated with .convex/ exclusion
+- Note: Convex not yet initialized (no npx convex dev) — will deploy later
+- CLAUDE.md already in place with full project conventions
+
 ## Learnings
 (Patterns discovered during implementation)
 

@@ -38,14 +38,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want the project initialized with Next.js + Convex + TypeScript so that we have a working foundation.
 
 **Acceptance Criteria:**
-- [ ] Next.js app created with App Router, TypeScript, Tailwind CSS
-- [ ] shadcn/ui initialized (`npx shadcn@latest init`) with default config
+- [x] Next.js app created with App Router, TypeScript, Tailwind CSS
+- [x] shadcn/ui initialized (`npx shadcn@latest init`) with default config
 - [ ] Convex initialized (`npx convex dev` runs without errors)
-- [ ] Project structure: `app/`, `convex/`, `components/`, `lib/`, `public/`
-- [ ] CLAUDE.md created with project conventions (stack, commands, patterns)
-- [ ] Git repo initialized with .gitignore (includes .env*, node_modules, .next)
-- [ ] `npm run dev` starts the app at localhost:3000
-- [ ] Typecheck passes
+- [x] Project structure: `app/`, `convex/`, `components/`, `lib/`, `public/`
+- [x] CLAUDE.md created with project conventions (stack, commands, patterns)
+- [x] Git repo initialized with .gitignore (includes .env*, node_modules, .next)
+- [x] `npm run dev` starts the app at localhost:3000
+- [x] Typecheck passes
 
 ### US-002: Tokenized Theme System
 **Description:** As a user, I want a consistent design system with light/dark mode that respects system preferences so the app looks polished from the start.
