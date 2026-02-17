@@ -150,11 +150,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want a responsive app layout with header, sidebar, and main content area so that I can navigate the app.
 
 **Acceptance Criteria:**
-- [ ] App layout with: header (logo "WOWWAI", theme toggle, user button), collapsible sidebar (nav links: Board, Projects, Workflows), main content area
-- [ ] Sidebar collapses to icons on mobile (hamburger menu toggle)
-- [ ] Uses CSS variables from theme system throughout
-- [ ] Responsive: sidebar hidden by default on mobile, shown on desktop
-- [ ] Typecheck passes
+- [x] App layout with: header (logo "WOWWAI", theme toggle, user button), collapsible sidebar (nav links: Board, Projects, Workflows), main content area
+- [x] Sidebar collapses to icons on mobile (hamburger menu toggle)
+- [x] Uses CSS variables from theme system throughout
+- [x] Responsive: sidebar hidden by default on mobile, shown on desktop
+- [x] Typecheck passes
 - [ ] Verify layout renders correctly in browser (desktop + mobile viewport)
 
 ### US-011: Kanban Board — Column Layout

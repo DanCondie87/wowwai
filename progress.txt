@@ -75,6 +75,17 @@
 - Auth routes under (auth) route group
 - Typecheck passes
 
+## US-010: App Layout Shell [DONE]
+- AppLayout component: header + collapsible sidebar + main content
+- AppHeader: WOWWAI logo, theme toggle, user button placeholder, hamburger on mobile
+- AppSidebar: Board, Workflows, My Work nav links with active state
+- Mobile: sidebar hidden by default, opens with overlay on hamburger click
+- Desktop: sidebar always visible, static positioning
+- (app) route group wraps board/workflows/my-work/settings/analytics
+- Root page redirects to /board
+- Placeholder pages for workflows, my-work, settings, analytics
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
