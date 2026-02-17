@@ -40,6 +40,7 @@ export default function BoardPage() {
       <CardDetailSheet
         taskId={detailTaskId}
         onClose={() => setDetailTaskId(null)}
+        onNavigate={(id) => setDetailTaskId(id)}
         projects={projects ?? []}
       />
     </>

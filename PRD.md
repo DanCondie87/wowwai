@@ -224,12 +224,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see and create subtasks within a task so that I can break work into smaller pieces.
 
 **Acceptance Criteria:**
-- [ ] Card detail view shows "Subtasks" section with list of child tasks (parentTaskId = this task's id)
-- [ ] Each subtask shows: title, status badge (colored pill), assignee avatar
-- [ ] "Add subtask" button opens an inline form (title + assignee) — creates task with parentTaskId set
-- [ ] Clicking a subtask navigates to its own detail view (with "← Back to parent" link)
-- [ ] Subtask count + progress bar visible on parent card in board view (from US-012)
-- [ ] Typecheck passes
+- [x] Card detail view shows "Subtasks" section with list of child tasks (parentTaskId = this task's id)
+- [x] Each subtask shows: title, status badge (colored pill), assignee avatar
+- [x] "Add subtask" button opens an inline form (title + assignee) — creates task with parentTaskId set
+- [x] Clicking a subtask navigates to its own detail view (with "← Back to parent" link)
+- [x] Subtask count + progress bar visible on parent card in board view (from US-012)
+- [x] Typecheck passes
 - [ ] Verify subtask creation and display in browser
 
 ### US-017: Audit Trail in Card Detail

@@ -141,6 +141,16 @@
 - Embeds SubtaskList (stub) and AuditTrail (stub)
 - Typecheck passes
 
+## US-016: Subtask Display in Card Detail [DONE]
+- SubtaskList component: shows child tasks with title, status badge, assignee avatar
+- Progress bar showing done/total count
+- Inline "Add subtask" form: title + assignee select, creates task with parentTaskId
+- Clicking subtask navigates to its detail view via onOpenSubtask callback
+- BackToParent component: "← Back to parent" link in subtask detail view
+- CardDetailSheet updated: onNavigate prop, BackToParent shown for subtasks
+- Board page wired up: onNavigate sets detailTaskId to navigate between parent/child
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

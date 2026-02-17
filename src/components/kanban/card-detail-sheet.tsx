@@ -21,12 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SubtaskList } from "./subtask-list";
+import { SubtaskList, BackToParent } from "./subtask-list";
 import { AuditTrail } from "./audit-trail";
 
 interface CardDetailSheetProps {
   taskId: Id<"tasks"> | null;
   onClose: () => void;
+  onNavigate?: (taskId: Id<"tasks">) => void;
   projects: Doc<"projects">[];
 }
 
@@ -43,6 +44,7 @@ const PRIORITY_COLORS: Record<string, string> = {
 export function CardDetailSheet({
   taskId,
   onClose,
+  onNavigate,
   projects,
 }: CardDetailSheetProps) {
   const taskData = useQuery(
@@ -96,6 +98,12 @@ export function CardDetailSheet({
         {task ? (
           <>
             <SheetHeader>
+              {task.parentTaskId && onNavigate && (
+                <BackToParent
+                  parentTaskId={task.parentTaskId}
+                  onNavigate={onNavigate}
+                />
+              )}
               <div className="flex items-center gap-2">
                 {project && (
                   <span
@@ -240,6 +248,7 @@ export function CardDetailSheet({
                 taskId={taskId!}
                 subtasks={task.subtasks}
                 projectId={task.projectId}
+                onOpenSubtask={onNavigate}
               />
 
               {/* Audit Trail — US-017 */}
