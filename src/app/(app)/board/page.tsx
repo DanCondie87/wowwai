@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { Suspense, useState, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -36,6 +36,14 @@ function filtersToParams(filters: BoardFilters): URLSearchParams {
 }
 
 export default function BoardPage() {
+  return (
+    <Suspense>
+      <BoardPageContent />
+    </Suspense>
+  );
+}
+
+function BoardPageContent() {
   const projects = useQuery(api.projects.getAll);
   const tasks = useQuery(api.tasks.getAll);
   const searchParams = useSearchParams();
