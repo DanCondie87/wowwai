@@ -277,11 +277,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to search across all tasks so that I can find anything quickly.
 
 **Acceptance Criteria:**
-- [ ] `convex/search.ts` — query `searchTasks`: full-text search across task title, description, cardId; returns matching tasks with project info
-- [ ] Convex search index defined on tasks table for title and description fields
-- [ ] Search results show: card ID, title, project name, status badge, assignee
-- [ ] Clicking a result opens the card detail view
-- [ ] Typecheck passes
+- [x] `convex/search.ts` — query `searchTasks`: full-text search across task title, description, cardId; returns matching tasks with project info
+- [x] Convex search index defined on tasks table for title and description fields
+- [x] Search results show: card ID, title, project name, status badge, assignee
+- [x] Clicking a result opens the card detail view
+- [x] Typecheck passes
 
 ### US-021: Command Palette (⌘K)
 **Description:** As a user, I want a keyboard-accessible command palette so that I can navigate and act quickly.

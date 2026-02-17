@@ -176,6 +176,14 @@
 - Uses rehype-sanitize for all markdown rendering per security conventions
 - Typecheck passes
 
+## US-020: Global Search [DONE]
+- convex/search.ts: searchTasks query with full-text search across title and cardId
+- Search indexes added to schema: search_title (filterFields: projectId, status), search_cardId (filterFields: projectId)
+- Results enriched with project name and color
+- Deduplication when same task matches both title and cardId
+- Returns up to 20 results
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

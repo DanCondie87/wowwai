@@ -66,7 +66,15 @@ export default defineSchema({
     .index("by_projectId", ["projectId"])
     .index("by_status", ["status"])
     .index("by_assignee", ["assignee"])
-    .index("by_parentTaskId", ["parentTaskId"]),
+    .index("by_parentTaskId", ["parentTaskId"])
+    .searchIndex("search_title", {
+      searchField: "title",
+      filterFields: ["projectId", "status"],
+    })
+    .searchIndex("search_cardId", {
+      searchField: "cardId",
+      filterFields: ["projectId"],
+    }),
 
   auditLogs: defineTable({
     taskId: v.id("tasks"),
