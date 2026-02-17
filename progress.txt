@@ -271,6 +271,14 @@
 - Seed is idempotent (checks existing template names before inserting)
 - Typecheck passes
 
+## US-031: Workflows List Page [DONE]
+- Workflows page at /workflows showing all templates as cards
+- Each card: workflow icon, name, description, step count badge, source file badge
+- Cards link to /workflows/[id] for detail view
+- Loading state and empty state handled
+- Uses getAllTemplates query (enriched with stepCount)
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

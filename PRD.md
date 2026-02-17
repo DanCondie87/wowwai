@@ -418,10 +418,10 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to browse my workflow templates so that I can select one to view.
 
 **Acceptance Criteria:**
-- [ ] Workflows page at `/workflows` showing all templates as cards
-- [ ] Each card shows: name, description, step count, source file path (if set)
-- [ ] Clicking a card navigates to `/workflows/[id]`
-- [ ] Typecheck passes
+- [x] Workflows page at `/workflows` showing all templates as cards
+- [x] Each card shows: name, description, step count, source file path (if set)
+- [x] Clicking a card navigates to `/workflows/[id]`
+- [x] Typecheck passes
 - [ ] Verify workflows list renders in browser
 
 ### US-032: Vertical Pipeline Renderer
