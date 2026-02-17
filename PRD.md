@@ -371,10 +371,10 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want security headers so that XSS and injection attacks are mitigated.
 
 **Acceptance Criteria:**
-- [ ] `next.config.js` adds security headers: X-Content-Type-Options (nosniff), X-Frame-Options (DENY), X-XSS-Protection (1; mode=block), Content-Security-Policy (default-src 'self', connect-src Convex domains, script-src 'self' 'unsafe-inline', style-src 'self' 'unsafe-inline')
-- [ ] All markdown rendering uses `rehype-sanitize` (installed, configured in a shared `<Markdown>` component)
-- [ ] No raw `dangerouslySetInnerHTML` anywhere in codebase
-- [ ] Typecheck passes
+- [x] `next.config.js` adds security headers: X-Content-Type-Options (nosniff), X-Frame-Options (DENY), X-XSS-Protection (1; mode=block), Content-Security-Policy (default-src 'self', connect-src Convex domains, script-src 'self' 'unsafe-inline', style-src 'self' 'unsafe-inline')
+- [x] All markdown rendering uses `rehype-sanitize` (installed, configured in a shared `<Markdown>` component)
+- [x] No raw `dangerouslySetInnerHTML` anywhere in codebase
+- [x] Typecheck passes
 
 ### US-028: Data Export
 **Description:** As a user, I want to export my data so that I have a backup and am never locked in.

@@ -21,8 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Markdown from "react-markdown";
-import rehypeSanitize from "rehype-sanitize";
+import { Markdown } from "@/components/ui/markdown";
 import { cn, getTagColor } from "@/lib/utils";
 import { X } from "lucide-react";
 import { SubtaskList, BackToParent } from "./subtask-list";
@@ -563,7 +562,7 @@ function SessionSummary({
             isProminent && "border-primary/30 bg-primary/5"
           )}
         >
-          <Markdown rehypePlugins={[rehypeSanitize]}>{value}</Markdown>
+          <Markdown>{value}</Markdown>
         </div>
       ) : (
         <button

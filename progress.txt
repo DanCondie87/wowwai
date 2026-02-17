@@ -239,6 +239,14 @@
 - Returns 429 Too Many Requests with Retry-After header when limit exceeded
 - Typecheck passes
 
+## US-027: Content Security Headers [DONE]
+- next.config.ts: security headers on all routes — X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Content-Security-Policy
+- CSP: default-src 'self', connect-src to Convex cloud/site/wss, script-src/style-src 'self' 'unsafe-inline', img-src 'self' data: https:
+- Created shared Markdown component (src/components/ui/markdown.tsx) with rehype-sanitize always applied
+- Updated card-detail-sheet to use shared Markdown component
+- Verified: no dangerouslySetInnerHTML anywhere in codebase
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
