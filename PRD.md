@@ -361,11 +361,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want rate limiting on the agent API so that runaway loops can't spam the database.
 
 **Acceptance Criteria:**
-- [ ] Install `convex-helpers` package
-- [ ] Rate limiter configured: 10 mutations/minute, burst to 20 (token bucket)
-- [ ] Rate limit applied to all HTTP action endpoints from US-025
-- [ ] Returns 429 Too Many Requests when limit exceeded
-- [ ] Typecheck passes
+- [x] Install `convex-helpers` package
+- [x] Rate limiter configured: 10 mutations/minute, burst to 20 (token bucket)
+- [x] Rate limit applied to all HTTP action endpoints from US-025
+- [x] Returns 429 Too Many Requests when limit exceeded
+- [x] Typecheck passes
 
 ### US-027: Content Security Headers
 **Description:** As a developer, I want security headers so that XSS and injection attacks are mitigated.

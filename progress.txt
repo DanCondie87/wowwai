@@ -231,6 +231,14 @@
 - Added internal query getByCardId and internal mutation agentUpdate to tasks.ts
 - Typecheck passes
 
+## US-026: Rate Limiting on Agent API [DONE]
+- Installed convex-helpers package
+- Added rateLimitTables to schema.ts (required for convex-helpers rate limiting)
+- Created convex/rateLimiter.ts with token bucket config: 10/min, burst to 20
+- All 3 HTTP agent endpoints (updateTask, createAuditLog, getTask) check rate limit before processing
+- Returns 429 Too Many Requests with Retry-After header when limit exceeded
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

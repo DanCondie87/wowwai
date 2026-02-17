@@ -36,6 +36,20 @@ function unauthorized(origin: string | null): Response {
   });
 }
 
+function tooManyRequests(origin: string | null, retryAt?: number): Response {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...corsHeaders(origin),
+  };
+  if (retryAt) {
+    headers["Retry-After"] = String(Math.ceil((retryAt - Date.now()) / 1000));
+  }
+  return new Response(
+    JSON.stringify({ error: "Too Many Requests" }),
+    { status: 429, headers }
+  );
+}
+
 // CORS preflight
 http.route({
   path: "/agent/updateTask",
@@ -77,6 +91,9 @@ http.route({
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
     if (!verifySecret(request)) return unauthorized(origin);
+
+    const rl = await ctx.runMutation(internal.rateLimiter.checkAgentRateLimit, {});
+    if (!rl.ok) return tooManyRequests(origin, rl.retryAt);
 
     const body = await request.json();
     const { cardId, status, modelUsed, sessionSummary, comment } = body;
@@ -128,6 +145,9 @@ http.route({
     const origin = request.headers.get("Origin");
     if (!verifySecret(request)) return unauthorized(origin);
 
+    const rl = await ctx.runMutation(internal.rateLimiter.checkAgentRateLimit, {});
+    if (!rl.ok) return tooManyRequests(origin, rl.retryAt);
+
     const body = await request.json();
     const { cardId, actor, action, comment, modelUsed } = body;
 
@@ -168,6 +188,9 @@ http.route({
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
     if (!verifySecret(request)) return unauthorized(origin);
+
+    const rl = await ctx.runMutation(internal.rateLimiter.checkAgentRateLimit, {});
+    if (!rl.ok) return tooManyRequests(origin, rl.retryAt);
 
     const url = new URL(request.url);
     const cardId = url.searchParams.get("cardId");
