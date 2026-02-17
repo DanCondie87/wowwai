@@ -217,4 +217,121 @@ http.route({
   }),
 });
 
+// --- File Sync Endpoints (for sync-agent) ---
+
+// CORS preflight for sync endpoints
+http.route({
+  path: "/sync/upsertFile",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+http.route({
+  path: "/sync/getPending",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+http.route({
+  path: "/sync/markSynced",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+// POST /sync/upsertFile — sync agent pushes file changes to Convex
+http.route({
+  path: "/sync/upsertFile",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!verifySecret(request)) return unauthorized(origin);
+
+    const body = await request.json();
+    const { filePath, content, editedBy } = body;
+
+    if (!filePath || content === undefined) {
+      return new Response(
+        JSON.stringify({ error: "filePath and content are required" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+      );
+    }
+
+    await ctx.runMutation(internal.fileVersions.createVersionInternal, {
+      filePath,
+      content,
+      editedBy: editedBy ?? "sync-agent",
+      editedVia: "file-watcher",
+    });
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+    );
+  }),
+});
+
+// GET /sync/getPending — sync agent polls for pending to-local items
+http.route({
+  path: "/sync/getPending",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!verifySecret(request)) return unauthorized(origin);
+
+    const items = await ctx.runQuery(internal.fileSyncQueue.getPendingInternal, {
+      direction: "to-local",
+    });
+
+    return new Response(JSON.stringify(items), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    });
+  }),
+});
+
+// POST /sync/markSynced — sync agent marks queue item as synced
+http.route({
+  path: "/sync/markSynced",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!verifySecret(request)) return unauthorized(origin);
+
+    const body = await request.json();
+    const { id, status } = body;
+
+    if (!id || !status) {
+      return new Response(
+        JSON.stringify({ error: "id and status are required" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+      );
+    }
+
+    await ctx.runMutation(internal.fileSyncQueue.updateStatusInternal, {
+      id,
+      status,
+    });
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+    );
+  }),
+});
+
 export default http;

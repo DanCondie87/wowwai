@@ -495,14 +495,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want a local Node.js agent that watches markdown files and pushes changes to Convex.
 
 **Acceptance Criteria:**
-- [ ] `sync-agent/` directory in project root with its own `package.json`
-- [ ] Uses `chokidar` to watch configurable directories (default: workspace `workflows/`, `templates/`, project CLAUDE.md paths)
-- [ ] On file change: reads file content, calls Convex HTTP action to upsert `fileVersions` entry
-- [ ] Configurable watch paths via `sync-agent/config.json`
-- [ ] Path safety: `resolveSafePath()` function that rejects paths outside allowed root, rejects non-allowed extensions (.md, .json, .yaml, .txt only), strips null bytes
-- [ ] Logs every file change with timestamp + file path to console
-- [ ] `AGENT_SECRET` loaded from `.env` file (not hardcoded)
-- [ ] Typecheck passes (if using TypeScript) or linting passes
+- [x] `sync-agent/` directory in project root with its own `package.json`
+- [x] Uses `chokidar` to watch configurable directories (default: workspace `workflows/`, `templates/`, project CLAUDE.md paths)
+- [x] On file change: reads file content, calls Convex HTTP action to upsert `fileVersions` entry
+- [x] Configurable watch paths via `sync-agent/config.json`
+- [x] Path safety: `resolveSafePath()` function that rejects paths outside allowed root, rejects non-allowed extensions (.md, .json, .yaml, .txt only), strips null bytes
+- [x] Logs every file change with timestamp + file path to console
+- [x] `AGENT_SECRET` loaded from `.env` file (not hardcoded)
+- [x] Typecheck passes (if using TypeScript) or linting passes
 
 ### US-038: Sync Agent — Pull from Convex
 **Description:** As a developer, I want the sync agent to pull UI edits from Convex and write them to local files.

@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 
 export const getByFilePath = query({
   args: { filePath: v.string() },
@@ -52,5 +52,23 @@ export const getVersionCount = query({
       .withIndex("by_filePath", (q) => q.eq("filePath", args.filePath))
       .collect();
     return versions.length;
+  },
+});
+
+export const createVersionInternal = internalMutation({
+  args: {
+    filePath: v.string(),
+    content: v.string(),
+    editedBy: v.string(),
+    editedVia: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("fileVersions", {
+      filePath: args.filePath,
+      content: args.content,
+      editedBy: args.editedBy,
+      editedVia: args.editedVia,
+      timestamp: Date.now(),
+    });
   },
 });

@@ -1,0 +1,9 @@
+{
+  "watchPaths": [
+    "../workflows",
+    "../docs"
+  ],
+  "allowedExtensions": [".md", ".json", ".yaml", ".txt"],
+  "pollIntervalMs": 5000,
+  "heartbeatIntervalMs": 60000
+}

@@ -1,0 +1,16 @@
+{
+  "name": "wowwai-sync-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "pm2 start ecosystem.config.cjs",
+    "stop": "pm2 stop wowwai-sync",
+    "logs": "pm2 logs wowwai-sync",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "dotenv": "^16.4.7"
+  }
+}

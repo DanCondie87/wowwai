@@ -329,6 +329,19 @@
 - getRelativeTime helper for human-readable timestamps
 - Typecheck passes
 
+## US-037: Sync Agent File Watcher [DONE]
+- sync-agent/ directory with own package.json (chokidar + dotenv deps)
+- index.js: chokidar file watcher on configurable paths (workflows/, docs/)
+- Watches for add/change events on allowed extensions (.md, .json, .yaml, .txt)
+- On file change: reads content, calls POST /sync/upsertFile HTTP endpoint
+- resolveSafePath(): rejects paths outside project root, non-allowed extensions, strips null bytes
+- Config via sync-agent/config.json (watchPaths, allowedExtensions, pollInterval, heartbeatInterval)
+- AGENT_SECRET loaded from .env (not hardcoded), .env.example provided
+- Convex HTTP endpoints added: POST /sync/upsertFile, GET /sync/getPending, POST /sync/markSynced
+- Internal mutations/queries added: fileVersions.createVersionInternal, fileSyncQueue.getPendingInternal, updateStatusInternal
+- Timestamps on all log output
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

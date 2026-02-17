@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalQuery, internalMutation } from "./_generated/server";
 
 export const enqueue = mutation({
   args: {
@@ -31,6 +31,27 @@ export const getPending = query({
 });
 
 export const updateStatus = mutation({
+  args: {
+    id: v.id("fileSyncQueue"),
+    status: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { status: args.status });
+  },
+});
+
+export const getPendingInternal = internalQuery({
+  args: { direction: v.string() },
+  handler: async (ctx, args) => {
+    const items = await ctx.db
+      .query("fileSyncQueue")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .collect();
+    return items.filter((item) => item.direction === args.direction);
+  },
+});
+
+export const updateStatusInternal = internalMutation({
   args: {
     id: v.id("fileSyncQueue"),
     status: v.string(),
