@@ -130,6 +130,17 @@
 - Form resets on close, submit disabled while creating
 - Typecheck passes
 
+## US-015: Card Detail View [DONE]
+- shadcn Sheet as side drawer (right, w-full sm:max-w-lg)
+- Editable inline title (click to edit, Enter/Escape/blur to save)
+- Editable description, tags, definitionOfDone, testingCriteria, figmaLink
+- Select dropdowns for assignee and priority
+- Status shown as badge (read-only — changed via drag)
+- Auto-save on blur with "Saved" flash confirmation
+- BLOCKED badge when blockedBy is non-empty
+- Embeds SubtaskList (stub) and AuditTrail (stub)
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

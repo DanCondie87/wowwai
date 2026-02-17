@@ -213,11 +213,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to tap a card to see and edit all its details so that I can manage tasks fully.
 
 **Acceptance Criteria:**
-- [ ] Clicking a card opens a detail panel (shadcn/ui `<Sheet>` as side drawer on desktop, full-screen sheet on mobile)
-- [ ] Detail view shows: card ID, title (editable inline), description (editable markdown textarea), status, assignee (toggleable), priority (dropdown), project, tags (editable), blockedBy list, definitionOfDone (editable textarea), testingCriteria (editable textarea), figmaLink (editable URL field)
-- [ ] Changes auto-save on field blur (with brief "Saved ✓" confirmation)
-- [ ] Close button returns to board
-- [ ] Typecheck passes
+- [x] Clicking a card opens a detail panel (shadcn/ui `<Sheet>` as side drawer on desktop, full-screen sheet on mobile)
+- [x] Detail view shows: card ID, title (editable inline), description (editable markdown textarea), status, assignee (toggleable), priority (dropdown), project, tags (editable), blockedBy list, definitionOfDone (editable textarea), testingCriteria (editable textarea), figmaLink (editable URL field)
+- [x] Changes auto-save on field blur (with brief "Saved ✓" confirmation)
+- [x] Close button returns to board
+- [x] Typecheck passes
 - [ ] Verify detail view opens and edits save in browser
 
 ### US-016: Subtask Display in Card Detail
