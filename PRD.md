@@ -407,12 +407,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want our existing workflow templates pre-loaded so that the visualizer has content from day one.
 
 **Acceptance Criteria:**
-- [ ] Seed script (`convex/seed.ts`) or init mutation that creates our 3 workflow templates: "Code Project", "Research", "Self-Improving Skills"
-- [ ] Each template populated with steps from the corresponding workflow files (`workflows/code-project.md`, `workflows/research.md`, `workflows/self-improving-skills.md`)
-- [ ] Steps include: name, description, order, references (filePath + type), modelRecommendation, agentType
-- [ ] Loop groups defined where applicable (e.g., build-test loop in code-project)
-- [ ] Seed is idempotent (can run multiple times without duplicating)
-- [ ] Typecheck passes
+- [x] Seed script (`convex/seed.ts`) or init mutation that creates our 3 workflow templates: "Code Project", "Research", "Self-Improving Skills"
+- [x] Each template populated with steps from the corresponding workflow files (`workflows/code-project.md`, `workflows/research.md`, `workflows/self-improving-skills.md`)
+- [x] Steps include: name, description, order, references (filePath + type), modelRecommendation, agentType
+- [x] Loop groups defined where applicable (e.g., build-test loop in code-project)
+- [x] Seed is idempotent (can run multiple times without duplicating)
+- [x] Typecheck passes
 
 ### US-031: Workflows List Page
 **Description:** As a user, I want to browse my workflow templates so that I can select one to view.

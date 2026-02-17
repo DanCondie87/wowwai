@@ -261,6 +261,16 @@
 - createStep mutation: full step definition with loop fields, references, modelRecommendation, agentType
 - Typecheck passes
 
+## US-030: Workflow Seed Data [DONE]
+- Seed script convex/seed.ts already exists with 3 templates: Code Project, Research, Self-Improving Skills
+- Created workflow markdown files: workflows/code-project.md, workflows/research.md, workflows/self-improving-skills.md
+- Each template has full step definitions with references, loop groups, model recommendations, agent types
+- Code Project: 7 steps with build-test loop (Implementation + Testing, max 5 iterations)
+- Research: 5 steps with analyze-refine loop (Analysis + Gap Identification, max 3 iterations)
+- Self-Improving Skills: 5 steps with practice-feedback loop (Practice + Self-Evaluation, max 5 iterations)
+- Seed is idempotent (checks existing template names before inserting)
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
