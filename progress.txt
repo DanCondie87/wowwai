@@ -122,6 +122,14 @@
 - Stub components created for CreateTaskDialog and CardDetailSheet
 - Typecheck passes
 
+## US-014: Create Task Modal [DONE]
+- Dialog with form: title (required), description, project select, assignee select, priority select, tags (comma-separated)
+- Uses shadcn Dialog, Input, Textarea, Select components
+- Task created in the column where "+" was clicked (defaultStatus prop)
+- Calls tasks.create mutation with all fields
+- Form resets on close, submit disabled while creating
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

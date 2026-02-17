@@ -201,12 +201,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to create new tasks quickly so that I can capture work items.
 
 **Acceptance Criteria:**
-- [ ] Clicking "+" on any column opens shadcn/ui `<Dialog>` (desktop) or `<Sheet>` (mobile)
-- [ ] Form fields using shadcn/ui components: title (Input, required), description (Textarea, optional), project (Select), assignee (dan/dali toggle via RadioGroup), priority (Select), tags (Input with comma handling)
-- [ ] Task created in the column where "+" was clicked (maps column to status)
-- [ ] On mobile: modal is a bottom sheet (slides up from bottom)
-- [ ] After creation: modal closes, new card appears in the column with animation
-- [ ] Typecheck passes
+- [x] Clicking "+" on any column opens shadcn/ui `<Dialog>` (desktop) or `<Sheet>` (mobile)
+- [x] Form fields using shadcn/ui components: title (Input, required), description (Textarea, optional), project (Select), assignee (dan/dali toggle via RadioGroup), priority (Select), tags (Input with comma handling)
+- [x] Task created in the column where "+" was clicked (maps column to status)
+- [x] On mobile: modal is a bottom sheet (slides up from bottom)
+- [x] After creation: modal closes, new card appears in the column with animation
+- [x] Typecheck passes
 - [ ] Verify task creation works in browser
 
 ### US-015: Card Detail View
