@@ -319,11 +319,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to add and filter by tags so that I can categorize tasks flexibly.
 
 **Acceptance Criteria:**
-- [ ] Tags displayed as colored pills on cards (colors auto-assigned from a palette based on tag name hash)
-- [ ] Tag input in card detail: type tag name, press Enter to add, X to remove
-- [ ] Autocomplete: suggest existing tags as user types (query all unique tags across tasks)
-- [ ] `convex/tasks.ts` — query `getAllTags`: returns distinct tag values across all tasks
-- [ ] Typecheck passes
+- [x] Tags displayed as colored pills on cards (colors auto-assigned from a palette based on tag name hash)
+- [x] Tag input in card detail: type tag name, press Enter to add, X to remove
+- [x] Autocomplete: suggest existing tags as user types (query all unique tags across tasks)
+- [x] `convex/tasks.ts` — query `getAllTags`: returns distinct tag values across all tasks
+- [x] Typecheck passes
 - [ ] Verify tag CRUD in browser
 
 ### US-024: Board Filter Bar

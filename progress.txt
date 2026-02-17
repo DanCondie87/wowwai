@@ -204,6 +204,13 @@
 - Click task opens CardDetailSheet with full navigation support
 - Typecheck passes
 
+## US-023: Tag System [DONE]
+- Tags displayed as colored pills on cards using getTagColor hash-based palette (already existed from US-012)
+- Upgraded EditableTags in card-detail-sheet: type tag name, Enter to add, X to remove
+- Autocomplete dropdown: queries getAllTags (already existed from US-022), shows matching suggestions as colored pills
+- Colored pill display in both card-detail and task-card views
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

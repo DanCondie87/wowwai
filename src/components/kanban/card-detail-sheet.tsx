@@ -23,7 +23,8 @@ import {
 } from "@/components/ui/select";
 import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
-import { cn } from "@/lib/utils";
+import { cn, getTagColor } from "@/lib/utils";
+import { X } from "lucide-react";
 import { SubtaskList, BackToParent } from "./subtask-list";
 import { AuditTrail } from "./audit-trail";
 import { BlockerList } from "./blocker-list";
@@ -404,41 +405,108 @@ function EditableTags({
   tags: string[];
   onSave: (tags: string[]) => void;
 }) {
-  const [draft, setDraft] = useState(tags.join(", "));
+  const [input, setInput] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const allTags = useQuery(api.tasks.getAllTags) ?? [];
+  const suggestions = input.trim()
+    ? allTags.filter(
+        (t) =>
+          t.toLowerCase().includes(input.trim().toLowerCase()) &&
+          !tags.includes(t)
+      )
+    : [];
 
-  useEffect(() => {
-    setDraft(tags.join(", "));
-  }, [tags]);
+  function addTag(tag: string) {
+    const trimmed = tag.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      onSave([...tags, trimmed]);
+    }
+    setInput("");
+    setShowSuggestions(false);
+  }
+
+  function removeTag(tag: string) {
+    onSave(tags.filter((t) => t !== tag));
+  }
 
   return (
     <div className="space-y-1">
       <label className="text-xs font-medium text-muted-foreground">
         Tags
       </label>
-      <Input
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={() => {
-          const newTags = draft
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean);
-          if (JSON.stringify(newTags) !== JSON.stringify(tags)) {
-            onSave(newTags);
-          }
-        }}
-        placeholder="Comma-separated tags"
-        className="h-8 text-sm"
-      />
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-1">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
+        <div className="flex flex-wrap gap-1">
+          {tags.map((tag) => {
+            const color = getTagColor(tag);
+            return (
+              <span
+                key={tag}
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium",
+                  color.bg,
+                  color.text
+                )}
+              >
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="hover:opacity-70"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            );
+          })}
         </div>
       )}
+      <div className="relative">
+        <Input
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            setShowSuggestions(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addTag(input);
+            }
+          }}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => {
+            setTimeout(() => setShowSuggestions(false), 150);
+          }}
+          placeholder="Type tag and press Enter..."
+          className="h-8 text-sm"
+        />
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="absolute z-10 mt-1 w-full rounded-md border bg-popover shadow-md">
+            {suggestions.slice(0, 6).map((suggestion) => {
+              const color = getTagColor(suggestion);
+              return (
+                <button
+                  key={suggestion}
+                  type="button"
+                  className="flex w-full items-center gap-2 px-3 py-1.5 text-sm hover:bg-accent text-left"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => addTag(suggestion)}
+                >
+                  <span
+                    className={cn(
+                      "rounded-full px-2 py-0.5 text-xs font-medium",
+                      color.bg,
+                      color.text
+                    )}
+                  >
+                    {suggestion}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
