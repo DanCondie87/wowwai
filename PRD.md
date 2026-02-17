@@ -110,13 +110,13 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to create, read, update, and archive projects so that I can organize my work.
 
 **Acceptance Criteria:**
-- [ ] `convex/projects.ts` — mutation `create`: takes name, slug, color, description; sets status="active", createdAt=Date.now()
-- [ ] `convex/projects.ts` — mutation `update`: takes id + partial fields, updates them
-- [ ] `convex/projects.ts` — mutation `archive`: sets status="archived"
-- [ ] `convex/projects.ts` — query `getAll`: returns all active projects
-- [ ] `convex/projects.ts` — query `getById`: returns single project by id
-- [ ] Auto-generate slug from name (lowercase, hyphens, no special chars)
-- [ ] Typecheck passes
+- [x] `convex/projects.ts` — mutation `create`: takes name, slug, color, description; sets status="active", createdAt=Date.now()
+- [x] `convex/projects.ts` — mutation `update`: takes id + partial fields, updates them
+- [x] `convex/projects.ts` — mutation `archive`: sets status="archived"
+- [x] `convex/projects.ts` — query `getAll`: returns all active projects
+- [x] `convex/projects.ts` — query `getById`: returns single project by id
+- [x] Auto-generate slug from name (lowercase, hyphens, no special chars)
+- [x] Typecheck passes
 
 ### US-008: Task CRUD Mutations & Queries
 **Description:** As a user, I want to create, read, update, move, and complete tasks so that I can manage work items.

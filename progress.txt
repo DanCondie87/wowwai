@@ -40,6 +40,14 @@
 - agentActivity: taskId, sessionKey, model, status, currentAction, timestamps (indexed by_taskId, by_sessionKey, by_status)
 - Typecheck passes
 
+## US-007: Project CRUD Mutations & Queries [DONE]
+- create: takes name, color, description; auto-generates slug via slugify()
+- update: takes id + optional name/slug/color/description; auto-regenerates slug when name changes
+- archive: sets status to "archived"
+- getAll: returns active projects using by_status index
+- getById: returns single project by id
+- Typecheck passes
+
 ## Learnings
 (Patterns discovered during implementation)
 
