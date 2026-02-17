@@ -77,11 +77,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want the database schema for projects and ideas so that we can store and query them.
 
 **Acceptance Criteria:**
-- [ ] `convex/schema.ts` defines `projects` table: name (string), slug (string), description (optional string), status ("active" | "archived"), color (string), createdAt (number)
-- [ ] `convex/schema.ts` defines `ideas` table: projectId (optional Id), title (string), description (optional string), tags (array of strings), status ("captured" | "exploring" | "ready" | "parked"), source ("dan" | "dali"), createdAt (number)
-- [ ] Indexes defined: projects by status, ideas by projectId, ideas by status
+- [x] `convex/schema.ts` defines `projects` table: name (string), slug (string), description (optional string), status ("active" | "archived"), color (string), createdAt (number)
+- [x] `convex/schema.ts` defines `ideas` table: projectId (optional Id), title (string), description (optional string), tags (array of strings), status ("captured" | "exploring" | "ready" | "parked"), source ("dan" | "dali"), createdAt (number)
+- [x] Indexes defined: projects by status, ideas by projectId, ideas by status
 - [ ] `npx convex dev` deploys schema without errors
-- [ ] Typecheck passes
+- [x] Typecheck passes
 
 ### US-005: Convex Schema — Tasks & Audit Logs
 **Description:** As a developer, I want the database schema for tasks and audit logs so that we can track work items and their history.

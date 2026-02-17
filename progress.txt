@@ -18,6 +18,14 @@
 - Replaced boilerplate page.tsx with WOWWAI landing + theme toggle
 - Typecheck passes
 
+## US-004: Convex Schema — Projects & Ideas [DONE]
+- Created convex/schema.ts with projects and ideas tables
+- Projects: name, slug, description, status (active/archived), color, createdAt
+- Ideas: projectId (optional), title, description, tags, status, source, createdAt
+- Indexes: projects by_status, ideas by_projectId and by_status
+- Created _generated stubs (dataModel, server, api) for typecheck without Convex init
+- Typecheck passes
+
 ## Learnings
 (Patterns discovered during implementation)
 
