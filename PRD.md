@@ -51,12 +51,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want a consistent design system with light/dark mode that respects system preferences so the app looks polished from the start.
 
 **Acceptance Criteria:**
-- [ ] shadcn/ui CSS variables configured in `globals.css` for both light and dark themes: background, foreground, card, border, primary, secondary, muted, accent, destructive (and their foreground variants)
-- [ ] Dark mode via `class` strategy (Tailwind `darkMode: "class"`)
-- [ ] `next-themes` ThemeProvider wrapping the app with system preference detection + localStorage override
-- [ ] Theme toggle component (sun/moon icon) using shadcn/ui Button in the app header
-- [ ] All subsequent components use shadcn/ui tokens (e.g., `bg-primary`, `text-muted-foreground`) — no hardcoded colors
-- [ ] Typecheck passes
+- [x] shadcn/ui CSS variables configured in `globals.css` for both light and dark themes: background, foreground, card, border, primary, secondary, muted, accent, destructive (and their foreground variants)
+- [x] Dark mode via `class` strategy (Tailwind `darkMode: "class"`)
+- [x] `next-themes` ThemeProvider wrapping the app with system preference detection + localStorage override
+- [x] Theme toggle component (sun/moon icon) using shadcn/ui Button in the app header
+- [x] All subsequent components use shadcn/ui tokens (e.g., `bg-primary`, `text-muted-foreground`) — no hardcoded colors
+- [x] Typecheck passes
 - [ ] Verify both themes render correctly in browser
 
 ### US-003: Clerk Authentication

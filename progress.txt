@@ -9,6 +9,15 @@
 - Note: Convex not yet initialized (no npx convex dev) — will deploy later
 - CLAUDE.md already in place with full project conventions
 
+## US-002: Tokenized Theme System [DONE]
+- CSS variables already configured in globals.css (OKLch color model, light + dark)
+- Created ThemeProvider component wrapping next-themes
+- Created ThemeToggle component (sun/moon icon, shadcn Button)
+- Updated layout.tsx: ThemeProvider with attribute="class", defaultTheme="system", enableSystem
+- Added suppressHydrationWarning to <html> for next-themes compatibility
+- Replaced boilerplate page.tsx with WOWWAI landing + theme toggle
+- Typecheck passes
+
 ## Learnings
 (Patterns discovered during implementation)
 
