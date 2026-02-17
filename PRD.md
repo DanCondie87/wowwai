@@ -477,12 +477,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see the edit history of documents and restore previous versions so that I can undo mistakes.
 
 **Acceptance Criteria:**
-- [ ] Version badge on each document reference showing "v{N}" (count of fileVersions entries)
-- [ ] Clicking the version badge opens a version history panel
-- [ ] History shows: list of versions with timestamp, editedBy, editedVia
-- [ ] Clicking a version shows its content in a read-only preview
-- [ ] [Restore] button on any previous version: creates a new version with the old content, adds to fileSyncQueue
-- [ ] Typecheck passes
+- [x] Version badge on each document reference showing "v{N}" (count of fileVersions entries)
+- [x] Clicking the version badge opens a version history panel
+- [x] History shows: list of versions with timestamp, editedBy, editedVia
+- [x] Clicking a version shows its content in a read-only preview
+- [x] [Restore] button on any previous version: creates a new version with the old content, adds to fileSyncQueue
+- [x] Typecheck passes
 - [ ] Verify version history in browser
 
 ---

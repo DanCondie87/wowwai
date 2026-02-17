@@ -318,6 +318,17 @@
 - "Saved" confirmation shown for 2 seconds after save
 - Typecheck passes
 
+## US-036: Document Version History [DONE]
+- Version badge "v{N}" on each document reference (count of fileVersions entries)
+- Clicking version badge opens version history Sheet panel
+- History: list of versions with timestamp, editedBy, editedVia, relative time
+- Preview button on each version shows content in read-only markdown view
+- Restore button on previous versions: creates new version with old content, adds to fileSyncQueue
+- Current version marked with "Current" badge
+- VersionEntry component: collapsible preview, restore action
+- getRelativeTime helper for human-readable timestamps
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
