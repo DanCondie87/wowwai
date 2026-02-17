@@ -48,6 +48,17 @@
 - getById: returns single project by id
 - Typecheck passes
 
+## US-008: Task CRUD Mutations & Queries [DONE]
+- create: auto-generates cardId as {SLUG}-{N}, sets position to max+1 in column
+- update: diffs fields, creates audit log entry per changed field
+- moveToColumn: updates status + position, sets completedAt when moving to "done"
+- reorder: updates position within same column
+- getByProject: sorted by status then position
+- getByStatus: returns all tasks across projects for a given status
+- getById: returns task + subtasks (child tasks via parentTaskId)
+- All mutations create audit log entries inline (same transaction)
+- Typecheck passes
+
 ## Learnings
 (Patterns discovered during implementation)
 

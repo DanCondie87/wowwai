@@ -3,20 +3,27 @@
  * Generated server utilities — stub until `npx convex dev` generates real types.
  */
 import type {
-  QueryBuilder,
-  MutationBuilder,
-  ActionBuilder,
-  InternalQueryBuilder,
-  InternalMutationBuilder,
-  InternalActionBuilder,
-  HttpActionBuilder,
+  GenericQueryCtx,
+  GenericMutationCtx,
+  RegisteredQuery,
+  RegisteredMutation,
+  RegisteredAction,
+  FunctionReference,
 } from "convex/server";
 import type { DataModel } from "./dataModel";
 
-export declare const query: QueryBuilder<DataModel, "public">;
-export declare const internalQuery: InternalQueryBuilder<DataModel>;
-export declare const mutation: MutationBuilder<DataModel, "public">;
-export declare const internalMutation: InternalMutationBuilder<DataModel>;
-export declare const action: ActionBuilder<DataModel, "public">;
-export declare const internalAction: InternalActionBuilder<DataModel>;
+type QueryBuilder = typeof import("convex/server").queryGeneric;
+type MutationBuilder = typeof import("convex/server").mutationGeneric;
+type InternalMutationBuilder = typeof import("convex/server").internalMutationGeneric;
+type InternalQueryBuilder = typeof import("convex/server").internalQueryGeneric;
+type ActionBuilder = typeof import("convex/server").actionGeneric;
+type InternalActionBuilder = typeof import("convex/server").internalActionGeneric;
+type HttpActionBuilder = typeof import("convex/server").httpActionGeneric;
+
+export declare const query: QueryBuilder;
+export declare const internalQuery: InternalQueryBuilder;
+export declare const mutation: MutationBuilder;
+export declare const internalMutation: InternalMutationBuilder;
+export declare const action: ActionBuilder;
+export declare const internalAction: InternalActionBuilder;
 export declare const httpAction: HttpActionBuilder;

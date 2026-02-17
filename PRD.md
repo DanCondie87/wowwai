@@ -122,14 +122,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to create, read, update, move, and complete tasks so that I can manage work items.
 
 **Acceptance Criteria:**
-- [ ] `convex/tasks.ts` — mutation `create`: takes projectId, title, description, assignee, priority, tags, status (default "backlog"); auto-generates cardId as `{PROJECT_SLUG}-{incrementing number}`; sets position, lastTouchedAt, createdAt
-- [ ] `convex/tasks.ts` — mutation `update`: takes id + partial fields, updates them, updates lastTouchedAt, creates audit log entry
-- [ ] `convex/tasks.ts` — mutation `moveToColumn`: takes id + new status + position; updates status + position + lastTouchedAt; creates audit log
-- [ ] `convex/tasks.ts` — mutation `reorder`: takes id + new position within same column
-- [ ] `convex/tasks.ts` — query `getByProject`: returns all tasks for a project, ordered by status then position
-- [ ] `convex/tasks.ts` — query `getByStatus`: returns all tasks with given status across all projects
-- [ ] `convex/tasks.ts` — query `getById`: returns single task with its subtasks (child tasks)
-- [ ] Typecheck passes
+- [x] `convex/tasks.ts` — mutation `create`: takes projectId, title, description, assignee, priority, tags, status (default "backlog"); auto-generates cardId as `{PROJECT_SLUG}-{incrementing number}`; sets position, lastTouchedAt, createdAt
+- [x] `convex/tasks.ts` — mutation `update`: takes id + partial fields, updates them, updates lastTouchedAt, creates audit log entry
+- [x] `convex/tasks.ts` — mutation `moveToColumn`: takes id + new status + position; updates status + position + lastTouchedAt; creates audit log
+- [x] `convex/tasks.ts` — mutation `reorder`: takes id + new position within same column
+- [x] `convex/tasks.ts` — query `getByProject`: returns all tasks for a project, ordered by status then position
+- [x] `convex/tasks.ts` — query `getByStatus`: returns all tasks with given status across all projects
+- [x] `convex/tasks.ts` — query `getById`: returns single task with its subtasks (child tasks)
+- [x] Typecheck passes
 
 ### US-009: Audit Log Mutations & Queries
 **Description:** As a developer, I want audit log helpers so that every task change is recorded automatically.
