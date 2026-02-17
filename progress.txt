@@ -368,6 +368,16 @@
 - docs/agent-integration.md: full guide with setup, code examples, API endpoint docs, rate limits, error codes
 - Typecheck passes
 
+## US-041: TASKS.md Migration Script [DONE]
+- scripts/migrate-tasks.ts: reads TASKS.md, parses ### Project Name headers and - [x/~/space] task lines
+- Maps sections to projects, auto-generates slugs and colors
+- Status mapping: [x] → done, [~] → in-progress, [ ] → backlog
+- Preserves task titles from markdown
+- Creates tasks via agent HTTP API (authenticated with AGENT_SECRET)
+- Dry-run mode (--dry-run): prints what would be created without writing
+- Outputs summary: "Created X projects, Y tasks"
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
