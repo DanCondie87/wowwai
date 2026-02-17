@@ -397,6 +397,14 @@
 - Notification text: "WOWWAI: {cardId} is blocked — needs your input"
 - Typecheck passes
 
+## US-044: Basic Analytics Queries [DONE]
+- convex/analytics.ts: four Convex queries for analytics data
+- getCycleTime: per-project average days from createdAt to completedAt for done tasks
+- getThroughput: 8-week rolling weekly count of completed tasks
+- getBlockerStats: total blocked (non-done) tasks, broken down by project with task list
+- getModelUsage: count of completed tasks by modelUsed field, sorted descending
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
