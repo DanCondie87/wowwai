@@ -428,12 +428,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see a workflow as a vertical pipeline of steps so that I can understand the process at a glance.
 
 **Acceptance Criteria:**
-- [ ] Workflow detail page at `/workflows/[id]` shows template name + vertical list of steps
-- [ ] Each step rendered as a collapsible card: step number, icon (based on type), name, status indicator
-- [ ] Steps connected by a vertical line/connector between cards
-- [ ] All steps start collapsed (show name + summary only)
-- [ ] Clicking a step expands it accordion-style to show: description, agent type, model recommendation, references list
-- [ ] Typecheck passes
+- [x] Workflow detail page at `/workflows/[id]` shows template name + vertical list of steps
+- [x] Each step rendered as a collapsible card: step number, icon (based on type), name, status indicator
+- [x] Steps connected by a vertical line/connector between cards
+- [x] All steps start collapsed (show name + summary only)
+- [x] Clicking a step expands it accordion-style to show: description, agent type, model recommendation, references list
+- [x] Typecheck passes
 - [ ] Verify pipeline renders in browser
 
 ### US-033: Loop Group Containers

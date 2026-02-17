@@ -279,6 +279,15 @@
 - Uses getAllTemplates query (enriched with stepCount)
 - Typecheck passes
 
+## US-032: Vertical Pipeline Renderer [DONE]
+- Workflow detail page at /workflows/[id] with template name, description, back button
+- WorkflowPipeline component: vertical pipeline with connector line and dots
+- Each step: collapsible accordion card with step number, agent type icon, name
+- Expanded view shows: description, model recommendation badge, references list
+- Agent-type icons: planner, architect, coder, tester, reviewer, deployer, researcher, analyst, writer, assessor, practitioner, evaluator
+- Vertical line connects all steps, dot markers at each step
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
