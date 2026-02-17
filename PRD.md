@@ -260,11 +260,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see AI-written work summaries on completed tasks so that I have a permanent narrative record.
 
 **Acceptance Criteria:**
-- [ ] Card detail view shows "Session Summary" section — a read-only markdown-rendered block
-- [ ] Displayed prominently when task status is "done" and sessionSummary is populated
-- [ ] Summary can also be edited manually (click to edit, save on blur)
-- [ ] Field included in task update mutation
-- [ ] Typecheck passes
+- [x] Card detail view shows "Session Summary" section — a read-only markdown-rendered block
+- [x] Displayed prominently when task status is "done" and sessionSummary is populated
+- [x] Summary can also be edited manually (click to edit, save on blur)
+- [x] Field included in task update mutation
+- [x] Typecheck passes
 - [ ] Verify session summary renders markdown correctly in browser
 
 ---

@@ -167,6 +167,15 @@
 - Replaces simple BLOCKED badge in card detail with full blocker management
 - Typecheck passes
 
+## US-019: Session Summary Field [DONE]
+- SessionSummary component: click-to-edit markdown field with rehype-sanitize
+- Read-only view: rendered markdown via react-markdown, prominent border when done
+- Edit mode: textarea with markdown support, save on blur, Escape to cancel
+- Empty state: dashed border placeholder "Click to add session summary..."
+- Displayed prominently (primary border + bg tint) when task status is "done"
+- Uses rehype-sanitize for all markdown rendering per security conventions
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

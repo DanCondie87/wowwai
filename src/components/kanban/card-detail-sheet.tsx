@@ -21,6 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Markdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
+import { cn } from "@/lib/utils";
 import { SubtaskList, BackToParent } from "./subtask-list";
 import { AuditTrail } from "./audit-trail";
 import { BlockerList } from "./blocker-list";
@@ -247,6 +250,13 @@ export function CardDetailSheet({
                 />
               </div>
 
+              {/* Session Summary — US-019 */}
+              <SessionSummary
+                value={task.sessionSummary ?? ""}
+                status={task.status}
+                onSave={(v) => handleFieldBlur("sessionSummary", v || undefined)}
+              />
+
               {/* Subtasks — US-016 */}
               <SubtaskList
                 taskId={taskId!}
@@ -428,6 +438,72 @@ function EditableTags({
             </Badge>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+function SessionSummary({
+  value,
+  status,
+  onSave,
+}: {
+  value: string;
+  status: string;
+  onSave: (value: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value);
+
+  useEffect(() => {
+    setDraft(value);
+  }, [value]);
+
+  // Only show prominently when done with content, but always allow editing
+  const isProminent = status === "done" && value;
+
+  return (
+    <div className="space-y-1">
+      <label className="text-xs font-medium text-muted-foreground">
+        Session Summary
+      </label>
+
+      {editing ? (
+        <Textarea
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={() => {
+            setEditing(false);
+            if (draft !== value) onSave(draft);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setEditing(false);
+              setDraft(value);
+            }
+          }}
+          placeholder="Write a session summary (markdown supported)..."
+          rows={5}
+          className="text-sm"
+          autoFocus
+        />
+      ) : value ? (
+        <div
+          onClick={() => setEditing(true)}
+          className={cn(
+            "cursor-pointer rounded-md border px-3 py-2 text-sm prose prose-sm dark:prose-invert max-w-none hover:bg-accent/50 transition-colors",
+            isProminent && "border-primary/30 bg-primary/5"
+          )}
+        >
+          <Markdown rehypePlugins={[rehypeSanitize]}>{value}</Markdown>
+        </div>
+      ) : (
+        <button
+          onClick={() => setEditing(true)}
+          className="w-full rounded-md border border-dashed px-3 py-2 text-left text-xs text-muted-foreground hover:bg-accent/50 transition-colors"
+        >
+          Click to add session summary...
+        </button>
       )}
     </div>
   );
