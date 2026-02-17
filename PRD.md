@@ -508,13 +508,13 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want the sync agent to pull UI edits from Convex and write them to local files.
 
 **Acceptance Criteria:**
-- [ ] Agent polls `fileSyncQueue` (direction: "to-local", status: "pending") every 5 seconds
-- [ ] For each pending entry: resolves safe path, writes content to local file, marks queue entry as "synced"
-- [ ] Uses `resolveSafePath()` from US-037 for all write operations
-- [ ] Creates parent directories if they don't exist
-- [ ] Logs every write operation with timestamp + file path
-- [ ] Error handling: if write fails, marks queue entry status as "conflict", logs error
-- [ ] Typecheck/lint passes
+- [x] Agent polls `fileSyncQueue` (direction: "to-local", status: "pending") every 5 seconds
+- [x] For each pending entry: resolves safe path, writes content to local file, marks queue entry as "synced"
+- [x] Uses `resolveSafePath()` from US-037 for all write operations
+- [x] Creates parent directories if they don't exist
+- [x] Logs every write operation with timestamp + file path
+- [x] Error handling: if write fails, marks queue entry status as "conflict", logs error
+- [x] Typecheck/lint passes
 
 ### US-039: Sync Agent — Process Management
 **Description:** As a developer, I want the sync agent to run reliably as a background process.

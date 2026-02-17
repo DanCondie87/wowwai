@@ -342,6 +342,16 @@
 - Timestamps on all log output
 - Typecheck passes
 
+## US-038: Sync Agent Pull from Convex [DONE]
+- pollSyncQueue() function polls GET /sync/getPending every 5 seconds (configurable)
+- For each pending item: resolves safe path, writes content to local file, marks as "synced"
+- Uses resolveSafePath() for all write operations (path validation)
+- Creates parent directories with mkdir -p if they don't exist
+- Logs every write operation with ISO timestamp and file path
+- Error handling: if write fails, marks queue entry status as "conflict", logs error
+- Marks synced via POST /sync/markSynced endpoint
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
