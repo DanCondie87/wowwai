@@ -6,10 +6,9 @@ const isPublicRoute = createRouteMatcher([
   "/api/agent(.*)", // Agent API uses its own x-agent-secret auth
 ]);
 
+// TODO: Re-enable auth.protect() once Clerk is properly configured
 export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect();
-  }
+  // Auth disabled for now — all routes public
 });
 
 export const config = {
