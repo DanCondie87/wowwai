@@ -248,12 +248,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see and manage task dependencies so that I know what's blocked and why.
 
 **Acceptance Criteria:**
-- [ ] Card detail view shows "Blocked By" section listing tasks that block this one
-- [ ] Each blocker shows: card ID, title, current status (colored badge), link to open that task
-- [ ] "Add blocker" button: opens a search/select to pick a task from the same project
-- [ ] Remove blocker: X button on each blocker entry
-- [ ] When all blockers are "done", the 🔴 BLOCKED badge automatically disappears from the card
-- [ ] Typecheck passes
+- [x] Card detail view shows "Blocked By" section listing tasks that block this one
+- [x] Each blocker shows: card ID, title, current status (colored badge), link to open that task
+- [x] "Add blocker" button: opens a search/select to pick a task from the same project
+- [x] Remove blocker: X button on each blocker entry
+- [x] When all blockers are "done", the 🔴 BLOCKED badge automatically disappears from the card
+- [x] Typecheck passes
 - [ ] Verify blocker management in browser
 
 ### US-019: Session Summary Field

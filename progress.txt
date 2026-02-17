@@ -159,6 +159,14 @@
 - Model used shown as small text badge
 - Typecheck passes
 
+## US-018: Blocker/Dependency Indicators [DONE]
+- BlockerList component: shows blockers with card ID, title, status badge, navigate link
+- Add blocker: Select picker with tasks from same project (excludes self and existing blockers)
+- Remove blocker: X button removes from blockedBy array via update mutation
+- BLOCKED badge on task card auto-updates reactively (blockedBy array empty = no badge)
+- Replaces simple BLOCKED badge in card detail with full blocker management
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

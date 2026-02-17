@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { SubtaskList, BackToParent } from "./subtask-list";
 import { AuditTrail } from "./audit-trail";
+import { BlockerList } from "./blocker-list";
 
 interface CardDetailSheetProps {
   taskId: Id<"tasks"> | null;
@@ -195,10 +196,13 @@ export function CardDetailSheet({
                 </div>
               </div>
 
-              {/* Blocked indicator */}
-              {task.blockedBy.length > 0 && (
-                <Badge variant="destructive">BLOCKED</Badge>
-              )}
+              {/* Blockers — US-018 */}
+              <BlockerList
+                taskId={taskId!}
+                blockedBy={task.blockedBy}
+                projectId={task.projectId}
+                onNavigate={onNavigate}
+              />
 
               {/* Description */}
               <EditableTextarea
