@@ -135,10 +135,10 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want audit log helpers so that every task change is recorded automatically.
 
 **Acceptance Criteria:**
-- [ ] `convex/auditLogs.ts` — mutation `create`: takes taskId, actor, action, before, after, comment, modelUsed; sets timestamp
-- [ ] `convex/auditLogs.ts` — query `getByTask`: returns all audit logs for a task, ordered by timestamp descending
-- [ ] Task mutations from US-008 automatically create audit log entries on status changes, assignee changes, and field updates
-- [ ] Typecheck passes
+- [x] `convex/auditLogs.ts` — mutation `create`: takes taskId, actor, action, before, after, comment, modelUsed; sets timestamp
+- [x] `convex/auditLogs.ts` — query `getByTask`: returns all audit logs for a task, ordered by timestamp descending
+- [x] Task mutations from US-008 automatically create audit log entries on status changes, assignee changes, and field updates
+- [x] Typecheck passes
 
 ---
 

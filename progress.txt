@@ -59,7 +59,16 @@
 - All mutations create audit log entries inline (same transaction)
 - Typecheck passes
 
+## US-009: Audit Log Mutations & Queries [DONE]
+- create mutation: public-facing, takes taskId, actor, action, before/after, comment, modelUsed
+- createInternal: internal mutation for use by other Convex functions
+- getByTask query: returns logs for a task, sorted by timestamp descending
+- Task mutations (US-008) inline audit log creation for status changes, field updates, moves
+- Typecheck passes
+
 ## Learnings
-(Patterns discovered during implementation)
+- Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
+- _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
+- Audit logs created inline via ctx.db.insert in same transaction as task mutations
 
 ---
