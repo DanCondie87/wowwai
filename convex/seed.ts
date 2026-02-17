@@ -1,4 +1,5 @@
 import { mutation } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 interface StepDef {
   name: string;
@@ -266,5 +267,243 @@ export const seedWorkflows = mutation({
     }
 
     return { templatesCreated, stepsCreated };
+  },
+});
+
+// Seed everything: projects + tasks + workflows
+export const seedAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Check if already seeded
+    const existingProjects = await ctx.db.query("projects").collect();
+    if (existingProjects.length > 0) {
+      return { status: "already seeded", projects: existingProjects.length };
+    }
+
+    const now = Date.now();
+
+    // --- Projects ---
+    const wowwaiId = await ctx.db.insert("projects", {
+      name: "WOWWAI",
+      slug: "wowwai",
+      description: "Ways of Working With AI — Project management + workflow control centre",
+      status: "active",
+      color: "#3b82f6",
+      createdAt: now,
+    });
+
+    const daliBrainId = await ctx.db.insert("projects", {
+      name: "Dali Brain",
+      slug: "dali-brain",
+      description: "Dali's self-improvement skills, memory systems, and personality evolution",
+      status: "active",
+      color: "#f59e0b",
+      createdAt: now,
+    });
+
+    const wyrdoId = await ctx.db.insert("projects", {
+      name: "Wyrdo",
+      slug: "wyrdo",
+      description: "Wyrdo Review App — Community review platform",
+      status: "active",
+      color: "#8b5cf6",
+      createdAt: now,
+    });
+
+    // --- WOWWAI Tasks ---
+    const wowwaiTasks: Array<{
+      title: string;
+      description: string;
+      status: "backlog" | "todo" | "in-progress" | "review" | "done";
+      assignee: "dan" | "dali";
+      priority: "low" | "medium" | "high" | "urgent";
+      tags: string[];
+    }> = [
+      {
+        title: "Enable Clerk authentication",
+        description: "Install @clerk/nextjs, wire up middleware, create sign-in/sign-up pages, integrate with ConvexProviderWithClerk",
+        status: "todo",
+        assignee: "dali",
+        priority: "high",
+        tags: ["auth", "security"],
+      },
+      {
+        title: "Test live deployment on mobile",
+        description: "Open wowwai.vercel.app on phone, test all views, check responsive layout, report issues",
+        status: "todo",
+        assignee: "dan",
+        priority: "high",
+        tags: ["testing", "mobile"],
+      },
+      {
+        title: "Import existing TASKS.md data",
+        description: "Run migration script to import current tasks from clawd/TASKS.md into Convex",
+        status: "backlog",
+        assignee: "dali",
+        priority: "medium",
+        tags: ["migration", "data"],
+      },
+      {
+        title: "Set up sync agent (pm2)",
+        description: "Configure pm2 file watcher for bi-directional sync between local files and Convex",
+        status: "backlog",
+        assignee: "dali",
+        priority: "medium",
+        tags: ["sync", "infra"],
+      },
+      {
+        title: "Custom domain setup",
+        description: "Point a custom domain to Vercel deployment",
+        status: "backlog",
+        assignee: "dan",
+        priority: "low",
+        tags: ["infra"],
+      },
+      {
+        title: "Board view — shipped ✓",
+        description: "Kanban board with drag-and-drop, column management, and card details",
+        status: "done",
+        assignee: "dali",
+        priority: "high",
+        tags: ["ui", "kanban"],
+      },
+      {
+        title: "Workflow visualizer — shipped ✓",
+        description: "Vertical accordion workflow viewer with pipeline steps, loop groups, and references",
+        status: "done",
+        assignee: "dali",
+        priority: "high",
+        tags: ["ui", "workflows"],
+      },
+      {
+        title: "Theme system — shipped ✓",
+        description: "Light/dark/system theme with shadcn CSS variables and next-themes",
+        status: "done",
+        assignee: "dali",
+        priority: "medium",
+        tags: ["ui", "theme"],
+      },
+    ];
+
+    let taskCount = 0;
+    for (const task of wowwaiTasks) {
+      taskCount++;
+      const cardId = `WOWWAI-${taskCount}`;
+      await ctx.db.insert("tasks", {
+        projectId: wowwaiId,
+        cardId,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        assignee: task.assignee,
+        priority: task.priority,
+        tags: task.tags,
+        blockedBy: [],
+        position: taskCount,
+        lastTouchedAt: now,
+        createdAt: now,
+        completedAt: task.status === "done" ? now : undefined,
+      });
+    }
+
+    // --- Dali Brain Tasks ---
+    const daliTasks: Array<{
+      title: string;
+      description: string;
+      status: "backlog" | "todo" | "in-progress" | "review" | "done";
+      assignee: "dan" | "dali";
+      priority: "low" | "medium" | "high" | "urgent";
+      tags: string[];
+    }> = [
+      {
+        title: "Memory maintenance — weekly review",
+        description: "Review daily memory files, distill lessons into MEMORY.md, prune stale info",
+        status: "in-progress",
+        assignee: "dali",
+        priority: "medium",
+        tags: ["memory", "maintenance"],
+      },
+      {
+        title: "Improve overnight task pitches",
+        description: "Track which pitches Dan accepts/rejects, learn patterns, improve suggestions",
+        status: "backlog",
+        assignee: "dali",
+        priority: "low",
+        tags: ["self-improvement"],
+      },
+    ];
+
+    let daliTaskCount = 0;
+    for (const task of daliTasks) {
+      daliTaskCount++;
+      await ctx.db.insert("tasks", {
+        projectId: daliBrainId,
+        cardId: `DALI-BRAIN-${daliTaskCount}`,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        assignee: task.assignee,
+        priority: task.priority,
+        tags: task.tags,
+        blockedBy: [],
+        position: daliTaskCount,
+        lastTouchedAt: now,
+        createdAt: now,
+      });
+    }
+
+    // --- Wyrdo Tasks ---
+    await ctx.db.insert("tasks", {
+      projectId: wyrdoId,
+      cardId: "WYRDO-1",
+      title: "Review app live at wyrdo-review.vercel.app",
+      description: "Community review platform — deployed and running",
+      status: "done",
+      assignee: "dali",
+      priority: "medium",
+      tags: ["shipped"],
+      blockedBy: [],
+      position: 1,
+      lastTouchedAt: now,
+      createdAt: now,
+      completedAt: now,
+    });
+
+    // --- Seed workflow templates ---
+    let templatesCreated = 0;
+    let stepsCreated = 0;
+
+    for (const template of TEMPLATES) {
+      const templateId = await ctx.db.insert("workflowTemplates", {
+        name: template.name,
+        description: template.description,
+        sourceFile: template.sourceFile,
+        createdAt: now,
+      });
+      templatesCreated++;
+
+      for (const step of template.steps) {
+        await ctx.db.insert("workflowSteps", {
+          templateId,
+          name: step.name,
+          description: step.description,
+          order: step.order,
+          loopGroupId: step.loopGroupId,
+          loopMaxIterations: step.loopMaxIterations,
+          loopExitCriteria: step.loopExitCriteria,
+          references: step.references,
+          modelRecommendation: step.modelRecommendation,
+          agentType: step.agentType,
+        });
+        stepsCreated++;
+      }
+    }
+
+    return {
+      projects: 3,
+      tasks: taskCount + daliTaskCount + 1,
+      templates: templatesCreated,
+      steps: stepsCreated,
+    };
   },
 });
