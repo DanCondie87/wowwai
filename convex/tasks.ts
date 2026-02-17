@@ -194,6 +194,14 @@ export const reorder = mutation({
   },
 });
 
+export const getAll = query({
+  args: {},
+  handler: async (ctx) => {
+    const tasks = await ctx.db.query("tasks").collect();
+    return tasks.sort((a, b) => a.position - b.position);
+  },
+});
+
 export const getByProject = query({
   args: { projectId: v.id("projects") },
   handler: async (ctx, args) => {

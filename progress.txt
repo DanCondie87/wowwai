@@ -86,6 +86,17 @@
 - Placeholder pages for workflows, my-work, settings, analytics
 - Typecheck passes
 
+## US-011: Kanban Board — Column Layout [DONE]
+- Board page at /board with 5 task status columns: Backlog, To Do, In Progress, Review, Done
+- KanbanBoard component: project filter dropdown, mobile column tabs, desktop horizontal scroll
+- KanbanColumn component: header with name + count, scrollable card list, "+" add button
+- Mobile: tab navigation to switch between columns (one at a time)
+- Desktop: all columns visible side-by-side with horizontal scroll
+- Empty state: "No tasks yet" message per column
+- Added tasks.getAll query to convex/tasks.ts
+- Column definitions in lib/columns.ts
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

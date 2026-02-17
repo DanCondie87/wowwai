@@ -161,13 +161,13 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see my tasks organized in columns so that I can visualize work status at a glance.
 
 **Acceptance Criteria:**
-- [ ] Board page at `/board` showing 6 columns: Ideas, Backlog, To Do, In Progress, Review, Done
-- [ ] Each column has: header with name + task count, scrollable card list, "+" add button at bottom
-- [ ] Columns scroll horizontally on desktop (all visible if screen is wide enough)
-- [ ] On mobile: swipe between columns (one column visible at a time with column name tabs at top)
-- [ ] Project filter dropdown above the board — filters all columns by selected project
-- [ ] Empty state: each column shows a subtle message when empty ("No tasks yet")
-- [ ] Typecheck passes
+- [x] Board page at `/board` showing 6 columns: Ideas, Backlog, To Do, In Progress, Review, Done
+- [x] Each column has: header with name + task count, scrollable card list, "+" add button at bottom
+- [x] Columns scroll horizontally on desktop (all visible if screen is wide enough)
+- [x] On mobile: swipe between columns (one column visible at a time with column name tabs at top)
+- [x] Project filter dropdown above the board — filters all columns by selected project
+- [x] Empty state: each column shows a subtle message when empty ("No tasks yet")
+- [x] Typecheck passes
 - [ ] Verify columns render with mock data in browser
 
 ### US-012: Task Card Component
