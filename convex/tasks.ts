@@ -234,6 +234,39 @@ export const getByStatus = query({
   },
 });
 
+export const getByAssignee = query({
+  args: {
+    assignee: v.optional(v.union(v.literal("dan"), v.literal("dali"))),
+  },
+  handler: async (ctx, args) => {
+    let tasks;
+    if (args.assignee) {
+      tasks = await ctx.db
+        .query("tasks")
+        .withIndex("by_assignee", (q) => q.eq("assignee", args.assignee!))
+        .collect();
+    } else {
+      tasks = await ctx.db.query("tasks").collect();
+    }
+    // Filter out done tasks and subtasks
+    return tasks.filter((t) => t.status !== "done" && !t.parentTaskId);
+  },
+});
+
+export const getAllTags = query({
+  args: {},
+  handler: async (ctx) => {
+    const tasks = await ctx.db.query("tasks").collect();
+    const tagSet = new Set<string>();
+    for (const task of tasks) {
+      for (const tag of task.tags) {
+        tagSet.add(tag);
+      }
+    }
+    return Array.from(tagSet).sort();
+  },
+});
+
 export const getById = query({
   args: { id: v.id("tasks") },
   handler: async (ctx, args) => {

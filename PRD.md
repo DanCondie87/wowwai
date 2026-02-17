@@ -301,12 +301,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see all tasks assigned to me across all projects in one view.
 
 **Acceptance Criteria:**
-- [ ] "My Work" page at `/my-work` — shows tasks grouped by project
-- [ ] `convex/tasks.ts` — query `getByAssignee`: returns all non-done tasks for a given assignee across all projects
-- [ ] Each section: project name header + list of tasks (card component, compact version)
-- [ ] Filter toggles: "Dan's tasks" / "Dali's tasks" / "All"
-- [ ] Sort by: priority, staleness, project
-- [ ] Typecheck passes
+- [x] "My Work" page at `/my-work` — shows tasks grouped by project
+- [x] `convex/tasks.ts` — query `getByAssignee`: returns all non-done tasks for a given assignee across all projects
+- [x] Each section: project name header + list of tasks (card component, compact version)
+- [x] Filter toggles: "Dan's tasks" / "Dali's tasks" / "All"
+- [x] Sort by: priority, staleness, project
+- [x] Typecheck passes
 - [ ] Verify My Work page renders in browser
 
 ---

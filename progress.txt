@@ -194,6 +194,16 @@
 - AppLayout wires header search button to command palette open state
 - Typecheck passes
 
+## US-022: Cross-Project My Work View [DONE]
+- getByAssignee query: returns non-done, non-subtask tasks for given assignee (or all)
+- getAllTags query: returns distinct tags across all tasks (for US-023)
+- My Work page: tasks grouped by project with project color dot and name header
+- Assignee toggle: All / Dan / Dali button group
+- Sort by: priority, staleness, project (Select dropdown)
+- Compact task rows: priority dot, cardId, title, status badge, blocked badge, assignee
+- Click task opens CardDetailSheet with full navigation support
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
