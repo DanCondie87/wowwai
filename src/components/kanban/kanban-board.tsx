@@ -27,6 +27,7 @@ interface KanbanBoardProps {
   isLoading: boolean;
   onAddTask?: (status: TaskStatus) => void;
   onCardClick?: (taskId: Id<"tasks">) => void;
+  selectedCardId?: Id<"tasks"> | null;
 }
 
 export function KanbanBoard({
@@ -35,6 +36,7 @@ export function KanbanBoard({
   isLoading,
   onAddTask,
   onCardClick,
+  selectedCardId,
 }: KanbanBoardProps) {
   const [activeColumnIndex, setActiveColumnIndex] = useState(0);
   const [activeTask, setActiveTask] = useState<Doc<"tasks"> | null>(null);
@@ -186,11 +188,12 @@ export function KanbanBoard({
               onAddTask={onAddTask}
               onCardClick={(id) => onCardClick?.(id as Id<"tasks">)}
               isOver={overColumnId === col.id}
+              selectedCardId={selectedCardId}
             />
           ))}
         </div>
 
-        {/* Mobile: single column view */}
+        {/* Mobile: single column view with swipe gestures */}
         <div className="flex-1 overflow-auto p-4 lg:hidden">
           <KanbanColumn
             column={COLUMNS[activeColumnIndex]}
@@ -202,6 +205,7 @@ export function KanbanBoard({
             onAddTask={onAddTask}
             onCardClick={(id) => onCardClick?.(id as Id<"tasks">)}
             isOver={overColumnId === COLUMNS[activeColumnIndex].id}
+            isMobile
           />
         </div>
 

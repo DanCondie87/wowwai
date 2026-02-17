@@ -6,10 +6,11 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
-import { Doc } from "../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { type ColumnDef, type TaskStatus } from "@/lib/columns";
 import { Button } from "@/components/ui/button";
 import { SortableTaskCard } from "./sortable-task-card";
+import { SwipeableTaskCard } from "./swipeable-task-card";
 import { cn } from "@/lib/utils";
 
 interface KanbanColumnProps {
@@ -20,6 +21,8 @@ interface KanbanColumnProps {
   onAddTask?: (status: TaskStatus) => void;
   onCardClick?: (taskId: string) => void;
   isOver?: boolean;
+  isMobile?: boolean;
+  selectedCardId?: Id<"tasks"> | null;
 }
 
 export function KanbanColumn({
@@ -30,6 +33,8 @@ export function KanbanColumn({
   onAddTask,
   onCardClick,
   isOver,
+  isMobile,
+  selectedCardId,
 }: KanbanColumnProps) {
   const { setNodeRef } = useDroppable({
     id: `column-${column.id}`,
@@ -82,8 +87,9 @@ export function KanbanColumn({
           )}
           {topLevelTasks.map((task) => {
             const counts = getSubtaskCounts(task._id);
-            return (
-              <SortableTaskCard
+            const isSelected = selectedCardId === task._id;
+            return isMobile ? (
+              <SwipeableTaskCard
                 key={task._id}
                 task={task}
                 project={projectMap.get(task.projectId)}
@@ -91,6 +97,22 @@ export function KanbanColumn({
                 subtaskDoneCount={counts.done}
                 onClick={() => onCardClick?.(task._id)}
               />
+            ) : (
+              <div
+                key={task._id}
+                className={cn(
+                  "rounded-md",
+                  isSelected && "ring-2 ring-primary"
+                )}
+              >
+                <SortableTaskCard
+                  task={task}
+                  project={projectMap.get(task.projectId)}
+                  subtaskCount={counts.total}
+                  subtaskDoneCount={counts.done}
+                  onClick={() => onCardClick?.(task._id)}
+                />
+              </div>
             );
           })}
         </div>
