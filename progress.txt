@@ -151,6 +151,14 @@
 - Board page wired up: onNavigate sets detailTaskId to navigate between parent/child
 - Typecheck passes
 
+## US-017: Audit Trail in Card Detail [DONE]
+- AuditTrail component loads audit logs via auditLogs.getByTask reactive query
+- Each entry: actor avatar (🦈/👤/⚙️), human-readable action, relative timestamp
+- Status changes shown with old → new colored badges
+- Comments displayed in muted italic block
+- Model used shown as small text badge
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

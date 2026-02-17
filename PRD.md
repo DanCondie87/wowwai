@@ -236,12 +236,12 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see a timeline of all changes to a task so that I have full history.
 
 **Acceptance Criteria:**
-- [ ] Card detail view shows "Activity" section at the bottom — chronological list of audit log entries
-- [ ] Each entry shows: actor avatar, action description (human-readable, e.g., "Dali moved this to In Progress"), timestamp (relative, e.g., "2 hours ago")
-- [ ] Status changes shown with colored badges (old → new)
-- [ ] Comments displayed with full text in a distinct style
-- [ ] Entries load from `auditLogs.getByTask` query
-- [ ] Typecheck passes
+- [x] Card detail view shows "Activity" section at the bottom — chronological list of audit log entries
+- [x] Each entry shows: actor avatar, action description (human-readable, e.g., "Dali moved this to In Progress"), timestamp (relative, e.g., "2 hours ago")
+- [x] Status changes shown with colored badges (old → new)
+- [x] Comments displayed with full text in a distinct style
+- [x] Entries load from `auditLogs.getByTask` query
+- [x] Typecheck passes
 - [ ] Verify audit trail renders in browser
 
 ### US-018: Blocker / Dependency Indicators
