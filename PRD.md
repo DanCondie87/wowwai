@@ -397,11 +397,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want queries for workflow templates and steps so that the UI can display them.
 
 **Acceptance Criteria:**
-- [ ] `convex/workflows.ts` — query `getAllTemplates`: returns all workflow templates
-- [ ] `convex/workflows.ts` — query `getTemplateWithSteps`: takes templateId, returns template + all its steps ordered by `order` field
-- [ ] `convex/workflows.ts` — mutation `createTemplate`: takes name, description, sourceFile
-- [ ] `convex/workflows.ts` — mutation `createStep`: takes templateId, name, description, order, loopGroupId, references, modelRecommendation, agentType
-- [ ] Typecheck passes
+- [x] `convex/workflows.ts` — query `getAllTemplates`: returns all workflow templates
+- [x] `convex/workflows.ts` — query `getTemplateWithSteps`: takes templateId, returns template + all its steps ordered by `order` field
+- [x] `convex/workflows.ts` — mutation `createTemplate`: takes name, description, sourceFile
+- [x] `convex/workflows.ts` — mutation `createStep`: takes templateId, name, description, order, loopGroupId, references, modelRecommendation, agentType
+- [x] Typecheck passes
 
 ### US-030: Workflow Seed Data
 **Description:** As a user, I want our existing workflow templates pre-loaded so that the visualizer has content from day one.

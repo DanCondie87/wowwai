@@ -255,6 +255,12 @@
 - Added Settings to sidebar navigation
 - Typecheck passes
 
+## US-029: Workflow Template Queries [DONE]
+- convex/workflows.ts: getAllTemplates (returns templates with stepCount), getTemplateWithSteps (template + sorted steps)
+- createTemplate mutation: name, description, sourceFile
+- createStep mutation: full step definition with loop fields, references, modelRecommendation, agentType
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
