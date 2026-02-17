@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderKanban, Workflow, X } from "lucide-react";
+import { LayoutDashboard, FolderKanban, Workflow, Settings, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/board", label: "Board", icon: LayoutDashboard },
   { href: "/workflows", label: "Workflows", icon: Workflow },
   { href: "/my-work", label: "My Work", icon: FolderKanban },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 interface AppSidebarProps {

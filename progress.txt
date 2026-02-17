@@ -247,6 +247,14 @@
 - Verified: no dangerouslySetInnerHTML anywhere in codebase
 - Typecheck passes
 
+## US-028: Data Export [DONE]
+- convex/export.ts: getFullExport query returns projects, tasks, ideas, auditLogs
+- Settings page at /settings with Export Data section
+- Export as JSON: full dump file (wowwai-export-YYYY-MM-DD.json)
+- Export as CSV: tasks table as CSV with headers (cardId, title, project, status, assignee, priority, tags, createdAt, completedAt)
+- Added Settings to sidebar navigation
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

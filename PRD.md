@@ -380,11 +380,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to export my data so that I have a backup and am never locked in.
 
 **Acceptance Criteria:**
-- [ ] Settings page at `/settings` with "Export Data" section
-- [ ] "Export as JSON" button: downloads full dump (projects, tasks, ideas, audit logs) as a single JSON file
-- [ ] "Export as CSV" button: downloads tasks as CSV (cardId, title, project, status, assignee, priority, tags, createdAt, completedAt)
-- [ ] `convex/export.ts` — query `getFullExport`: returns all tables data
-- [ ] Typecheck passes
+- [x] Settings page at `/settings` with "Export Data" section
+- [x] "Export as JSON" button: downloads full dump (projects, tasks, ideas, audit logs) as a single JSON file
+- [x] "Export as CSV" button: downloads tasks as CSV (cardId, title, project, status, assignee, priority, tags, createdAt, completedAt)
+- [x] `convex/export.ts` — query `getFullExport`: returns all tables data
+- [x] Typecheck passes
 - [ ] Verify export downloads valid files in browser
 
 ---
