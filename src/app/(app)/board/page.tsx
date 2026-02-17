@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { KanbanBoard } from "@/components/kanban/kanban-board";
@@ -11,8 +11,9 @@ import { CardDetailSheet } from "@/components/kanban/card-detail-sheet";
 import { BoardFilterBar, type BoardFilters } from "@/components/kanban/board-filter-bar";
 import { RecommendButton } from "@/components/kanban/recommend-button";
 import { KeyboardShortcutsDialog } from "@/components/keyboard-shortcuts-dialog";
+import { PullToRefresh } from "@/components/pull-to-refresh";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
-import { type TaskStatus } from "@/lib/columns";
+import { COLUMNS, type TaskStatus } from "@/lib/columns";
 
 function parseFilters(params: URLSearchParams): BoardFilters {
   return {
@@ -67,6 +68,25 @@ export default function BoardPage() {
   const [createDialogStatus, setCreateDialogStatus] = useState<TaskStatus>("backlog");
   const [detailTaskId, setDetailTaskId] = useState<Id<"tasks"> | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [selectedCardId, setSelectedCardId] = useState<Id<"tasks"> | null>(null);
+  const moveToColumn = useMutation(api.tasks.moveToColumn);
+
+  // All visible top-level tasks for j/k navigation
+  const visibleTasks = useMemo(
+    () => filteredTasks.filter((t) => !t.parentTaskId).sort((a, b) => {
+      const colA = COLUMNS.findIndex((c) => c.id === a.status);
+      const colB = COLUMNS.findIndex((c) => c.id === b.status);
+      if (colA !== colB) return colA - colB;
+      return a.position - b.position;
+    }),
+    [filteredTasks]
+  );
+
+  // Pull-to-refresh: re-trigger queries
+  const handleRefresh = useCallback(async () => {
+    // Short delay to show spinner — Convex reactive queries re-sync automatically
+    await new Promise((r) => setTimeout(r, 500));
+  }, []);
 
   useKeyboardShortcuts({
     onNewTask: () => {
@@ -74,20 +94,61 @@ export default function BoardPage() {
       setCreateDialogOpen(true);
     },
     onEditCard: () => {
-      // If a card is selected, open its detail
-      if (detailTaskId) return;
-      const firstTask = filteredTasks.find((t) => !t.parentTaskId);
-      if (firstTask) setDetailTaskId(firstTask._id);
+      if (selectedCardId) {
+        setDetailTaskId(selectedCardId);
+      } else {
+        const firstTask = visibleTasks[0];
+        if (firstTask) setDetailTaskId(firstTask._id);
+      }
+    },
+    onNextCard: () => {
+      if (visibleTasks.length === 0) return;
+      if (!selectedCardId) {
+        setSelectedCardId(visibleTasks[0]._id);
+        return;
+      }
+      const idx = visibleTasks.findIndex((t) => t._id === selectedCardId);
+      if (idx < visibleTasks.length - 1) {
+        setSelectedCardId(visibleTasks[idx + 1]._id);
+      }
+    },
+    onPrevCard: () => {
+      if (visibleTasks.length === 0) return;
+      if (!selectedCardId) {
+        setSelectedCardId(visibleTasks[visibleTasks.length - 1]._id);
+        return;
+      }
+      const idx = visibleTasks.findIndex((t) => t._id === selectedCardId);
+      if (idx > 0) {
+        setSelectedCardId(visibleTasks[idx - 1]._id);
+      }
+    },
+    onMoveRight: () => {
+      if (!selectedCardId) return;
+      const task = filteredTasks.find((t) => t._id === selectedCardId);
+      if (!task) return;
+      const colIdx = COLUMNS.findIndex((c) => c.id === task.status);
+      if (colIdx < COLUMNS.length - 1) {
+        moveToColumn({ id: selectedCardId, status: COLUMNS[colIdx + 1].id, position: 0 });
+      }
+    },
+    onMoveLeft: () => {
+      if (!selectedCardId) return;
+      const task = filteredTasks.find((t) => t._id === selectedCardId);
+      if (!task) return;
+      const colIdx = COLUMNS.findIndex((c) => c.id === task.status);
+      if (colIdx > 0) {
+        moveToColumn({ id: selectedCardId, status: COLUMNS[colIdx - 1].id, position: 0 });
+      }
     },
     onFocusSearch: () => {
-      // Trigger Cmd+K palette
       document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
     },
     onShowHelp: () => setShortcutsOpen(true),
   });
 
   return (
-    <>
+    <PullToRefresh onRefresh={handleRefresh} className="flex h-full flex-col">
       <div className="flex items-center justify-between px-4 pt-3">
         <div className="flex-1">
           <BoardFilterBar
@@ -108,6 +169,7 @@ export default function BoardPage() {
           setCreateDialogOpen(true);
         }}
         onCardClick={(taskId) => setDetailTaskId(taskId)}
+        selectedCardId={selectedCardId}
       />
 
       <CreateTaskDialog
@@ -128,6 +190,6 @@ export default function BoardPage() {
         open={shortcutsOpen}
         onOpenChange={setShortcutsOpen}
       />
-    </>
+    </PullToRefresh>
   );
 }

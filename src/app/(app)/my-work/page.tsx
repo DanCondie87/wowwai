@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Doc, Id } from "../../../../convex/_generated/dataModel";
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CardDetailSheet } from "@/components/kanban/card-detail-sheet";
+import { PullToRefresh } from "@/components/pull-to-refresh";
 
 type SortOption = "priority" | "staleness" | "project";
 
@@ -94,6 +95,10 @@ export default function MyWorkPage() {
     return Array.from(groups.values());
   }, [sortedTasks, projectMap]);
 
+  const handleRefresh = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 500));
+  }, []);
+
   if (tasks === undefined || projects === undefined) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -103,7 +108,7 @@ export default function MyWorkPage() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <PullToRefresh onRefresh={handleRefresh} className="flex h-full flex-col">
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-3 border-b px-4 py-3">
         <h2 className="text-lg font-semibold text-foreground mr-2">My Work</h2>
@@ -217,6 +222,6 @@ export default function MyWorkPage() {
         onNavigate={(id) => setDetailTaskId(id)}
         projects={projects ?? []}
       />
-    </div>
+    </PullToRefresh>
   );
 }
