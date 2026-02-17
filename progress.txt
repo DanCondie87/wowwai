@@ -388,6 +388,15 @@
 - docs/notifications.md: full guide with usage examples, security rules, quiet hours, dev mode
 - Typecheck passes
 
+## US-043: Blocker Notification Trigger [DONE]
+- convex/notifications.ts: internal functions for blocker notification logic
+- checkBlockedTasks: internalQuery returning dali-assigned, blocked, non-done tasks
+- logBlockerNotification: internalMutation inserting blocker_notification audit log
+- processBlockerNotifications: checks quiet hours (23:00-08:00 AEST), deduplicates within 4 hours
+- Only notifies for dali-assigned tasks with blockers needing Dan's action
+- Notification text: "WOWWAI: {cardId} is blocked — needs your input"
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
