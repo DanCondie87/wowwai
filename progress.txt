@@ -288,6 +288,16 @@
 - Vertical line connects all steps, dot markers at each step
 - Typecheck passes
 
+## US-033: Loop Group Containers [DONE]
+- LoopGroupContainer component: tinted bg-primary/5 container with dashed border
+- Header: repeat icon, loop name (human-readable), step count badge, max iterations badge
+- Exit criteria shown below header
+- Collapsible: click header to expand/collapse (starts expanded)
+- Steps inside loop indented with pl-2 and dashed borders
+- groupSteps() function groups steps by loopGroupId into LoopGroup objects
+- isLoopGroup() type guard distinguishes groups from individual steps
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

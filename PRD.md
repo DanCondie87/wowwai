@@ -440,11 +440,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to see grouped steps that form a loop so that I understand iterative processes.
 
 **Acceptance Criteria:**
-- [ ] Steps with the same `loopGroupId` are visually grouped inside a container with tinted background
-- [ ] Container header shows: 🔁 icon, loop name, max iterations, exit criteria
-- [ ] Container is collapsible (collapsed: "🔁 Build & Refine Loop (3 steps)", expanded: shows nested steps)
-- [ ] Steps inside the loop are slightly indented relative to non-loop steps
-- [ ] Typecheck passes
+- [x] Steps with the same `loopGroupId` are visually grouped inside a container with tinted background
+- [x] Container header shows: 🔁 icon, loop name, max iterations, exit criteria
+- [x] Container is collapsible (collapsed: "🔁 Build & Refine Loop (3 steps)", expanded: shows nested steps)
+- [x] Steps inside the loop are slightly indented relative to non-loop steps
+- [x] Typecheck passes
 - [ ] Verify loop container renders in browser
 
 ### US-034: Document Reference Display
