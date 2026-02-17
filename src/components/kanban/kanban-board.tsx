@@ -94,6 +94,7 @@ export function KanbanBoard({ projects, tasks, isLoading }: KanbanBoardProps) {
             key={col.id}
             column={col}
             tasks={tasksByStatus(col.id)}
+            allTasks={filteredTasks}
             projects={projects}
           />
         ))}
@@ -104,6 +105,7 @@ export function KanbanBoard({ projects, tasks, isLoading }: KanbanBoardProps) {
         <KanbanColumn
           column={COLUMNS[activeColumnIndex]}
           tasks={tasksByStatus(COLUMNS[activeColumnIndex].id)}
+          allTasks={filteredTasks}
           projects={projects}
         />
       </div>

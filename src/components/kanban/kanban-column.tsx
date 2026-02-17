@@ -9,6 +9,7 @@ import { TaskCard } from "@/components/kanban/task-card";
 interface KanbanColumnProps {
   column: ColumnDef;
   tasks: Doc<"tasks">[];
+  allTasks: Doc<"tasks">[];
   projects: Doc<"projects">[];
   onAddTask?: (status: string) => void;
   onCardClick?: (taskId: string) => void;
@@ -17,11 +18,23 @@ interface KanbanColumnProps {
 export function KanbanColumn({
   column,
   tasks,
+  allTasks,
   projects,
   onAddTask,
   onCardClick,
 }: KanbanColumnProps) {
   const projectMap = new Map(projects.map((p) => [p._id, p]));
+
+  function getSubtaskCounts(taskId: string) {
+    const subtasks = allTasks.filter((t) => t.parentTaskId === taskId);
+    return {
+      total: subtasks.length,
+      done: subtasks.filter((t) => t.status === "done").length,
+    };
+  }
+
+  // Only show top-level tasks (no parentTaskId) in the columns
+  const topLevelTasks = tasks.filter((t) => !t.parentTaskId);
 
   return (
     <div className="flex w-72 flex-shrink-0 flex-col rounded-lg bg-muted/50 lg:w-72">
@@ -32,26 +45,31 @@ export function KanbanColumn({
             {column.label}
           </h3>
           <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium text-muted-foreground">
-            {tasks.length}
+            {topLevelTasks.length}
           </span>
         </div>
       </div>
 
       {/* Card list */}
       <div className="flex-1 space-y-2 overflow-y-auto px-2 pb-2">
-        {tasks.length === 0 && (
+        {topLevelTasks.length === 0 && (
           <p className="py-8 text-center text-xs text-muted-foreground">
             No tasks yet
           </p>
         )}
-        {tasks.map((task) => (
-          <TaskCard
-            key={task._id}
-            task={task}
-            project={projectMap.get(task.projectId)}
-            onClick={() => onCardClick?.(task._id)}
-          />
-        ))}
+        {topLevelTasks.map((task) => {
+          const counts = getSubtaskCounts(task._id);
+          return (
+            <TaskCard
+              key={task._id}
+              task={task}
+              project={projectMap.get(task.projectId)}
+              subtaskCount={counts.total}
+              subtaskDoneCount={counts.done}
+              onClick={() => onCardClick?.(task._id)}
+            />
+          );
+        })}
       </div>
 
       {/* Add button */}

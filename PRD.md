@@ -174,13 +174,13 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want task cards that show key info at a glance so that I can scan the board quickly.
 
 **Acceptance Criteria:**
-- [ ] Card component shows: project color strip (left border, 3px), card ID (e.g., "WOWWAI-42" in muted text), title (bold), assignee avatar (🦈 for dali, 👤 for dan), priority dot (green=low, blue=medium, orange=high, red=urgent)
-- [ ] Tags shown as small pills below title (max 3 visible, "+N" for overflow)
-- [ ] Subtask progress bar if task has children (visual bar, not just fraction)
-- [ ] 🔴 "BLOCKED" badge shown when blockedBy array is non-empty
-- [ ] Staleness indicator: green dot (<24h), yellow (1-3 days), orange (3-7 days), red (>7 days) based on lastTouchedAt
-- [ ] Card uses theme CSS variables, hover state with subtle elevation
-- [ ] Typecheck passes
+- [x] Card component shows: project color strip (left border, 3px), card ID (e.g., "WOWWAI-42" in muted text), title (bold), assignee avatar (🦈 for dali, 👤 for dan), priority dot (green=low, blue=medium, orange=high, red=urgent)
+- [x] Tags shown as small pills below title (max 3 visible, "+N" for overflow)
+- [x] Subtask progress bar if task has children (visual bar, not just fraction)
+- [x] 🔴 "BLOCKED" badge shown when blockedBy array is non-empty
+- [x] Staleness indicator: green dot (<24h), yellow (1-3 days), orange (3-7 days), red (>7 days) based on lastTouchedAt
+- [x] Card uses theme CSS variables, hover state with subtle elevation
+- [x] Typecheck passes
 - [ ] Verify card renders correctly with various data combinations in browser
 
 ### US-013: Drag and Drop Between Columns

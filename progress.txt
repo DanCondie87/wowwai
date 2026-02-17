@@ -97,6 +97,19 @@
 - Column definitions in lib/columns.ts
 - Typecheck passes
 
+## US-012: Task Card Component [DONE]
+- Project color strip (3px left border)
+- Card ID in muted text, title bold
+- Assignee avatar: shark emoji for dali, person for dan
+- Priority dot: green/blue/orange/red for low/medium/high/urgent
+- Tags as pills (max 3 visible, +N overflow)
+- Subtask progress bar with fraction text
+- BLOCKED badge (destructive variant) when blockedBy is non-empty
+- Staleness indicator: green <24h, yellow 1-3d, orange 3-7d, red >7d
+- Hover elevation, focus-visible ring
+- Columns only show top-level tasks (filter out subtasks)
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
