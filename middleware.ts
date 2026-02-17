@@ -1,22 +1,16 @@
-// TODO: Replace with Clerk middleware when keys are available
-// import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-//
-// const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
-//
-// export default clerkMiddleware(async (auth, request) => {
-//   if (!isPublicRoute(request)) {
-//     await auth.protect();
-//   }
-// });
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+const isPublicRoute = createRouteMatcher([
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/api/agent(.*)", // Agent API uses its own x-agent-secret auth
+]);
 
-export function middleware(_request: NextRequest) {
-  // No-op middleware — passes all requests through
-  // TODO: Add Clerk auth protection when keys are configured
-  return NextResponse.next();
-}
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
+  }
+});
 
 export const config = {
   matcher: [
