@@ -9,6 +9,9 @@ import { KanbanBoard } from "@/components/kanban/kanban-board";
 import { CreateTaskDialog } from "@/components/kanban/create-task-dialog";
 import { CardDetailSheet } from "@/components/kanban/card-detail-sheet";
 import { BoardFilterBar, type BoardFilters } from "@/components/kanban/board-filter-bar";
+import { RecommendButton } from "@/components/kanban/recommend-button";
+import { KeyboardShortcutsDialog } from "@/components/keyboard-shortcuts-dialog";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { type TaskStatus } from "@/lib/columns";
 
 function parseFilters(params: URLSearchParams): BoardFilters {
@@ -63,14 +66,38 @@ export default function BoardPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [createDialogStatus, setCreateDialogStatus] = useState<TaskStatus>("backlog");
   const [detailTaskId, setDetailTaskId] = useState<Id<"tasks"> | null>(null);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+
+  useKeyboardShortcuts({
+    onNewTask: () => {
+      setCreateDialogStatus("backlog");
+      setCreateDialogOpen(true);
+    },
+    onEditCard: () => {
+      // If a card is selected, open its detail
+      if (detailTaskId) return;
+      const firstTask = filteredTasks.find((t) => !t.parentTaskId);
+      if (firstTask) setDetailTaskId(firstTask._id);
+    },
+    onFocusSearch: () => {
+      // Trigger Cmd+K palette
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+    },
+    onShowHelp: () => setShortcutsOpen(true),
+  });
 
   return (
     <>
-      <BoardFilterBar
-        projects={projects ?? []}
-        filters={filters}
-        onFiltersChange={handleFiltersChange}
-      />
+      <div className="flex items-center justify-between px-4 pt-3">
+        <div className="flex-1">
+          <BoardFilterBar
+            projects={projects ?? []}
+            filters={filters}
+            onFiltersChange={handleFiltersChange}
+          />
+        </div>
+        <RecommendButton />
+      </div>
 
       <KanbanBoard
         projects={projects ?? []}
@@ -95,6 +122,11 @@ export default function BoardPage() {
         onClose={() => setDetailTaskId(null)}
         onNavigate={(id) => setDetailTaskId(id)}
         projects={projects ?? []}
+      />
+
+      <KeyboardShortcutsDialog
+        open={shortcutsOpen}
+        onOpenChange={setShortcutsOpen}
       />
     </>
   );

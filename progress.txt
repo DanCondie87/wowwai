@@ -416,6 +416,19 @@
 - Responsive: cards stack vertically on mobile
 - Typecheck passes
 
+## US-046: What Should I Work On Button [DONE]
+- convex/recommend.ts: Convex action with heuristic scoring (no external AI call)
+- Priority scores: urgent=40, high=30, medium=15, low=5
+- Staleness bonus: +25 if >1 week, +15 if >3 days untouched
+- Blocking bonus: +20 per task this one blocks
+- Status bonus: +10 for in-progress, +15 for review
+- Filters to actionable tasks (not done, not blocked, optional assignee filter)
+- Returns top 3 with cardId, title, reason, score, projectName
+- RecommendButton component: "What should I work on?" button on board page
+- Dialog shows ranked recommendations with score badge and reasoning
+- Board page updated with RecommendButton in header area
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
