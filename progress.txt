@@ -26,6 +26,12 @@
 - Created _generated stubs (dataModel, server, api) for typecheck without Convex init
 - Typecheck passes
 
+## US-005: Convex Schema — Tasks & Audit Logs [DONE]
+- Tasks table: full spec with projectId, parentTaskId, cardId, status union, assignee, priority, tags, blockedBy array, position, timestamps
+- AuditLogs table: taskId, actor union, action, before/after, comment, modelUsed, timestamp
+- Indexes: tasks by_projectId, by_status, by_assignee, by_parentTaskId; auditLogs by_taskId
+- Typecheck passes
+
 ## Learnings
 (Patterns discovered during implementation)
 

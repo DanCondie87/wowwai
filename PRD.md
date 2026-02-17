@@ -87,11 +87,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want the database schema for tasks and audit logs so that we can track work items and their history.
 
 **Acceptance Criteria:**
-- [ ] `tasks` table: projectId (Id), parentTaskId (optional Id), cardId (string), title (string), description (optional string), status ("backlog" | "todo" | "in-progress" | "review" | "done"), assignee ("dan" | "dali"), priority ("low" | "medium" | "high" | "urgent"), tags (array of strings), workflowTemplateId (optional Id), modelUsed (optional string), blockedBy (array of Ids), definitionOfDone (optional string), testingCriteria (optional string), figmaLink (optional string), position (number), sessionSummary (optional string), lastTouchedAt (number), createdAt (number), completedAt (optional number)
-- [ ] `auditLogs` table: taskId (Id), actor ("dan" | "dali" | "system"), action (string), before (optional string), after (optional string), comment (optional string), modelUsed (optional string), timestamp (number)
-- [ ] Indexes: tasks by projectId, tasks by status, tasks by assignee, tasks by parentTaskId, auditLogs by taskId
+- [x] `tasks` table: projectId (Id), parentTaskId (optional Id), cardId (string), title (string), description (optional string), status ("backlog" | "todo" | "in-progress" | "review" | "done"), assignee ("dan" | "dali"), priority ("low" | "medium" | "high" | "urgent"), tags (array of strings), workflowTemplateId (optional Id), modelUsed (optional string), blockedBy (array of Ids), definitionOfDone (optional string), testingCriteria (optional string), figmaLink (optional string), position (number), sessionSummary (optional string), lastTouchedAt (number), createdAt (number), completedAt (optional number)
+- [x] `auditLogs` table: taskId (Id), actor ("dan" | "dali" | "system"), action (string), before (optional string), after (optional string), comment (optional string), modelUsed (optional string), timestamp (number)
+- [x] Indexes: tasks by projectId, tasks by status, tasks by assignee, tasks by parentTaskId, auditLogs by taskId
 - [ ] `npx convex dev` deploys without errors
-- [ ] Typecheck passes
+- [x] Typecheck passes
 
 ### US-006: Convex Schema — Workflows, File Sync, Agent Activity
 **Description:** As a developer, I want the remaining schema tables so that the full data model is in place.
