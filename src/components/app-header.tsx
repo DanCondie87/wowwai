@@ -1,14 +1,15 @@
 "use client";
 
-import { Menu, User } from "lucide-react";
+import { Menu, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 interface AppHeaderProps {
   onMenuToggle: () => void;
+  onSearchClick?: () => void;
 }
 
-export function AppHeader({ onMenuToggle }: AppHeaderProps) {
+export function AppHeader({ onMenuToggle, onSearchClick }: AppHeaderProps) {
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 lg:px-6">
       <Button
@@ -28,6 +29,16 @@ export function AppHeader({ onMenuToggle }: AppHeaderProps) {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        {/* Search button — mobile: icon, desktop: shows shortcut hint */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onSearchClick}
+          title="Search (Ctrl+K)"
+        >
+          <Search className="h-5 w-5" />
+          <span className="sr-only">Search</span>
+        </Button>
         <ThemeToggle />
         {/* TODO: Replace with Clerk <UserButton /> when keys are available */}
         <Button variant="ghost" size="icon">

@@ -287,14 +287,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want a keyboard-accessible command palette so that I can navigate and act quickly.
 
 **Acceptance Criteria:**
-- [ ] `⌘K` (Mac) / `Ctrl+K` (Windows) opens a modal search/command palette
-- [ ] Uses shadcn/ui `<Command>` component (cmdk) for the palette UI
-- [ ] Palette shows: search input at top, results below grouped by type (Tasks, Projects, Actions)
-- [ ] Typing searches tasks by title/cardId (uses searchTasks from US-020)
-- [ ] Action commands available: "Create task", "Go to Board", "Go to Projects", "Go to Workflows"
-- [ ] Arrow keys navigate results, Enter selects, Escape closes
-- [ ] On mobile: accessible via search icon in header (no keyboard shortcut)
-- [ ] Typecheck passes
+- [x] `⌘K` (Mac) / `Ctrl+K` (Windows) opens a modal search/command palette
+- [x] Uses shadcn/ui `<Command>` component (cmdk) for the palette UI
+- [x] Palette shows: search input at top, results below grouped by type (Tasks, Projects, Actions)
+- [x] Typing searches tasks by title/cardId (uses searchTasks from US-020)
+- [x] Action commands available: "Create task", "Go to Board", "Go to Projects", "Go to Workflows"
+- [x] Arrow keys navigate results, Enter selects, Escape closes
+- [x] On mobile: accessible via search icon in header (no keyboard shortcut)
+- [x] Typecheck passes
 - [ ] Verify command palette works in browser
 
 ### US-022: Cross-Project "My Work" View

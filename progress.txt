@@ -184,6 +184,16 @@
 - Returns up to 20 results
 - Typecheck passes
 
+## US-021: Command Palette [DONE]
+- CommandPalette component using shadcn CommandDialog (cmdk)
+- Cmd+K / Ctrl+K keyboard shortcut to open/close
+- Search input searches tasks via searchTasks query (US-020)
+- Results grouped: Tasks (with project dot, cardId, title, status, assignee), Actions (Create task), Navigation (Board, My Work, Workflows, Analytics, Settings)
+- Search icon added to header for mobile access
+- External open/close control via externalOpen/onExternalOpenChange props
+- AppLayout wires header search button to command palette open state
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
