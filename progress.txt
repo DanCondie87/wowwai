@@ -307,6 +307,17 @@
 - convex/fileSyncQueue.ts: enqueue, getPending, updateStatus queries/mutations
 - Typecheck passes
 
+## US-035: Inline Document Editing [DONE]
+- Edit button next to View on each document reference
+- Clicking Edit opens Sheet panel with textarea editor (markdown content)
+- Breadcrumb shows "Editing: {filePath}" with section if specified
+- Orange "Unsaved changes" indicator when content differs from saved
+- Save writes to fileSyncQueue (direction: "to-local", status: "pending") and creates fileVersions entry
+- Cancel reverts to view mode without saving
+- Sheet panel is full-width on mobile (responsive)
+- "Saved" confirmation shown for 2 seconds after save
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

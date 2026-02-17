@@ -463,14 +463,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to edit referenced documents inline and save changes back to source files so that I can fine-tune workflows from the UI.
 
 **Acceptance Criteria:**
-- [ ] [Edit] button next to [View] on each document reference
-- [ ] Clicking [Edit] transforms the preview panel into a textarea editor with markdown content
-- [ ] Breadcrumb shows: "Editing: {filePath}" (or section if specified)
-- [ ] Orange "Unsaved changes" indicator appears when content differs from saved version
-- [ ] [Save] button: writes content to `fileSyncQueue` (direction: "to-local", status: "pending"), creates entry in `fileVersions`, shows "✅ Saved" confirmation
-- [ ] [Cancel] button: reverts to view mode without saving
-- [ ] On mobile: editor opens as full-screen bottom sheet
-- [ ] Typecheck passes
+- [x] [Edit] button next to [View] on each document reference
+- [x] Clicking [Edit] transforms the preview panel into a textarea editor with markdown content
+- [x] Breadcrumb shows: "Editing: {filePath}" (or section if specified)
+- [x] Orange "Unsaved changes" indicator appears when content differs from saved version
+- [x] [Save] button: writes content to `fileSyncQueue` (direction: "to-local", status: "pending"), creates entry in `fileVersions`, shows "✅ Saved" confirmation
+- [x] [Cancel] button: reverts to view mode without saving
+- [x] On mobile: editor opens as full-screen bottom sheet
+- [x] Typecheck passes
 - [ ] Verify edit + save flow in browser (saves to Convex — local sync tested separately)
 
 ### US-036: Document Version History
