@@ -360,6 +360,14 @@
 - README.md with full setup instructions: install, configure, start/stop/logs, how it works
 - Typecheck passes
 
+## US-040: Subagent Task Update Flow [DONE]
+- lib/agent-client.ts: helper module wrapping Convex HTTP calls with x-agent-secret header
+- Functions: updateTaskStatus(cardId, status, modelUsed, sessionSummary), addAuditLog(cardId, actor, action, comment, modelUsed), getTask(cardId)
+- Uses CONVEX_SITE_URL and AGENT_SECRET from environment
+- Exports TaskStatus and TaskData types for type-safe usage
+- docs/agent-integration.md: full guide with setup, code examples, API endpoint docs, rate limits, error codes
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
