@@ -32,6 +32,14 @@
 - Indexes: tasks by_projectId, by_status, by_assignee, by_parentTaskId; auditLogs by_taskId
 - Typecheck passes
 
+## US-006: Convex Schema — Workflows, File Sync, Agent Activity [DONE]
+- workflowTemplates: name, description, sourceFile, createdAt
+- workflowSteps: templateId, name, description, order, loop fields, references array, model/agent info
+- fileVersions: filePath, content, editedBy, editedVia, snapshotName, timestamp (indexed by_filePath)
+- fileSyncQueue: filePath, content, direction, status, timestamp (indexed by_status, by_filePath)
+- agentActivity: taskId, sessionKey, model, status, currentAction, timestamps (indexed by_taskId, by_sessionKey, by_status)
+- Typecheck passes
+
 ## Learnings
 (Patterns discovered during implementation)
 

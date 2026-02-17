@@ -97,14 +97,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want the remaining schema tables so that the full data model is in place.
 
 **Acceptance Criteria:**
-- [ ] `workflowTemplates` table: name (string), description (optional string), sourceFile (optional string), createdAt (number)
-- [ ] `workflowSteps` table: templateId (Id), name (string), description (string), order (number), loopGroupId (optional string), loopMaxIterations (optional number), loopExitCriteria (optional string), references (array of objects with type/label/filePath/section/content), modelRecommendation (optional string), agentType (optional string)
-- [ ] `fileVersions` table: filePath (string), content (string), editedBy (string), editedVia (string), snapshotName (optional string), timestamp (number)
-- [ ] `fileSyncQueue` table: filePath (string), content (string), direction (string), status (string), timestamp (number)
-- [ ] `agentActivity` table: taskId (optional Id), sessionKey (string), model (string), status (string), currentAction (optional string), startedAt (number), lastHeartbeat (number)
-- [ ] Indexes defined for all tables on primary lookup fields
+- [x] `workflowTemplates` table: name (string), description (optional string), sourceFile (optional string), createdAt (number)
+- [x] `workflowSteps` table: templateId (Id), name (string), description (string), order (number), loopGroupId (optional string), loopMaxIterations (optional number), loopExitCriteria (optional string), references (array of objects with type/label/filePath/section/content), modelRecommendation (optional string), agentType (optional string)
+- [x] `fileVersions` table: filePath (string), content (string), editedBy (string), editedVia (string), snapshotName (optional string), timestamp (number)
+- [x] `fileSyncQueue` table: filePath (string), content (string), direction (string), status (string), timestamp (number)
+- [x] `agentActivity` table: taskId (optional Id), sessionKey (string), model (string), status (string), currentAction (optional string), startedAt (number), lastHeartbeat (number)
+- [x] Indexes defined for all tables on primary lookup fields
 - [ ] `npx convex dev` deploys without errors
-- [ ] Typecheck passes
+- [x] Typecheck passes
 
 ### US-007: Project CRUD Mutations & Queries
 **Description:** As a user, I want to create, read, update, and archive projects so that I can organize my work.
