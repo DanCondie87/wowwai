@@ -110,6 +110,18 @@
 - Columns only show top-level tasks (filter out subtasks)
 - Typecheck passes
 
+## US-013: Drag and Drop Between Columns [DONE]
+- DndContext wraps the board with PointerSensor + TouchSensor
+- SortableContext + useSortable for card dragging within/between columns
+- useDroppable on columns for cross-column drop targets
+- DragOverlay shows ghost card during drag
+- Touch-friendly: 200ms delay activation for mobile long-press
+- Column highlights with ring-2 when hovered during drag
+- handleDragEnd calls moveToColumn for cross-column moves, reorder for same-column
+- Board page wired up with onAddTask and onCardClick callbacks
+- Stub components created for CreateTaskDialog and CardDetailSheet
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

@@ -1,18 +1,25 @@
 "use client";
 
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { Plus } from "lucide-react";
 import { Doc } from "../../../convex/_generated/dataModel";
-import { type ColumnDef } from "@/lib/columns";
+import { type ColumnDef, type TaskStatus } from "@/lib/columns";
 import { Button } from "@/components/ui/button";
-import { TaskCard } from "@/components/kanban/task-card";
+import { SortableTaskCard } from "./sortable-task-card";
+import { cn } from "@/lib/utils";
 
 interface KanbanColumnProps {
   column: ColumnDef;
   tasks: Doc<"tasks">[];
   allTasks: Doc<"tasks">[];
   projects: Doc<"projects">[];
-  onAddTask?: (status: string) => void;
+  onAddTask?: (status: TaskStatus) => void;
   onCardClick?: (taskId: string) => void;
+  isOver?: boolean;
 }
 
 export function KanbanColumn({
@@ -22,7 +29,13 @@ export function KanbanColumn({
   projects,
   onAddTask,
   onCardClick,
+  isOver,
 }: KanbanColumnProps) {
+  const { setNodeRef } = useDroppable({
+    id: `column-${column.id}`,
+    data: { type: "column", status: column.id },
+  });
+
   const projectMap = new Map(projects.map((p) => [p._id, p]));
 
   function getSubtaskCounts(taskId: string) {
@@ -35,9 +48,15 @@ export function KanbanColumn({
 
   // Only show top-level tasks (no parentTaskId) in the columns
   const topLevelTasks = tasks.filter((t) => !t.parentTaskId);
+  const taskIds = topLevelTasks.map((t) => t._id);
 
   return (
-    <div className="flex w-72 flex-shrink-0 flex-col rounded-lg bg-muted/50 lg:w-72">
+    <div
+      className={cn(
+        "flex w-72 flex-shrink-0 flex-col rounded-lg bg-muted/50 transition-colors lg:w-72",
+        isOver && "ring-2 ring-primary/30 bg-muted/80"
+      )}
+    >
       {/* Column header */}
       <div className="flex items-center justify-between px-3 py-2">
         <div className="flex items-center gap-2">
@@ -51,26 +70,31 @@ export function KanbanColumn({
       </div>
 
       {/* Card list */}
-      <div className="flex-1 space-y-2 overflow-y-auto px-2 pb-2">
-        {topLevelTasks.length === 0 && (
-          <p className="py-8 text-center text-xs text-muted-foreground">
-            No tasks yet
-          </p>
-        )}
-        {topLevelTasks.map((task) => {
-          const counts = getSubtaskCounts(task._id);
-          return (
-            <TaskCard
-              key={task._id}
-              task={task}
-              project={projectMap.get(task.projectId)}
-              subtaskCount={counts.total}
-              subtaskDoneCount={counts.done}
-              onClick={() => onCardClick?.(task._id)}
-            />
-          );
-        })}
-      </div>
+      <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
+        <div
+          ref={setNodeRef}
+          className="flex-1 space-y-2 overflow-y-auto px-2 pb-2 min-h-[60px]"
+        >
+          {topLevelTasks.length === 0 && (
+            <p className="py-8 text-center text-xs text-muted-foreground">
+              No tasks yet
+            </p>
+          )}
+          {topLevelTasks.map((task) => {
+            const counts = getSubtaskCounts(task._id);
+            return (
+              <SortableTaskCard
+                key={task._id}
+                task={task}
+                project={projectMap.get(task.projectId)}
+                subtaskCount={counts.total}
+                subtaskDoneCount={counts.done}
+                onClick={() => onCardClick?.(task._id)}
+              />
+            );
+          })}
+        </div>
+      </SortableContext>
 
       {/* Add button */}
       <div className="p-2">

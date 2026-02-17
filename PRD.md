@@ -187,14 +187,14 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want to drag tasks between columns so that I can update their status visually.
 
 **Acceptance Criteria:**
-- [ ] dnd-kit installed and configured (`@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`)
-- [ ] Cards are draggable within and between columns
-- [ ] Drag overlay shows a ghost of the card being dragged
-- [ ] Dropping a card in a new column calls `moveToColumn` mutation (updates status + position)
-- [ ] Reordering within a column calls `reorder` mutation
-- [ ] Touch-friendly: drag works on mobile with long-press to initiate
-- [ ] Visual feedback: column highlights when a card is dragged over it
-- [ ] Typecheck passes
+- [x] dnd-kit installed and configured (`@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`)
+- [x] Cards are draggable within and between columns
+- [x] Drag overlay shows a ghost of the card being dragged
+- [x] Dropping a card in a new column calls `moveToColumn` mutation (updates status + position)
+- [x] Reordering within a column calls `reorder` mutation
+- [x] Touch-friendly: drag works on mobile with long-press to initiate
+- [x] Visual feedback: column highlights when a card is dragged over it
+- [x] Typecheck passes
 - [ ] Verify drag and drop works in browser (desktop + mobile)
 
 ### US-014: Create Task Modal
