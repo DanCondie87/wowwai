@@ -221,6 +221,16 @@
 - Removed old project-only filter from KanbanBoard; board now receives pre-filtered tasks
 - Typecheck passes
 
+## US-025: Agent API with Shared Secret Auth [DONE]
+- convex/http.ts: HTTP router with 3 endpoints + CORS preflight handlers
+- POST /agent/updateTask: cardId lookup, updates status/modelUsed/sessionSummary, optional comment as audit log
+- POST /agent/createAuditLog: creates audit log entry for a task by cardId
+- GET /agent/getTask: returns task data by cardId query param
+- All endpoints verify x-agent-secret header against AGENT_SECRET env var, return 401 if invalid
+- CORS headers: allow Vercel origin + localhost:3000 + localhost:3001
+- Added internal query getByCardId and internal mutation agentUpdate to tasks.ts
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat

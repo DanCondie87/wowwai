@@ -349,13 +349,13 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want authenticated HTTP endpoints so that AI agents can update tasks securely.
 
 **Acceptance Criteria:**
-- [ ] `convex/http.ts` defines HTTP routes for agent operations
-- [ ] Every HTTP action checks `x-agent-secret` header against `AGENT_SECRET` environment variable
-- [ ] Returns 401 Unauthorized if secret is missing or wrong
-- [ ] Endpoints: `POST /agent/updateTask` (cardId, status, modelUsed, sessionSummary, comment), `POST /agent/createAuditLog` (taskId, actor, action, comment, modelUsed), `GET /agent/getTask` (cardId)
-- [ ] `AGENT_SECRET` set as Convex environment variable (not in code)
-- [ ] CORS headers: allow only Vercel frontend origin + localhost
-- [ ] Typecheck passes
+- [x] `convex/http.ts` defines HTTP routes for agent operations
+- [x] Every HTTP action checks `x-agent-secret` header against `AGENT_SECRET` environment variable
+- [x] Returns 401 Unauthorized if secret is missing or wrong
+- [x] Endpoints: `POST /agent/updateTask` (cardId, status, modelUsed, sessionSummary, comment), `POST /agent/createAuditLog` (taskId, actor, action, comment, modelUsed), `GET /agent/getTask` (cardId)
+- [x] `AGENT_SECRET` set as Convex environment variable (not in code)
+- [x] CORS headers: allow only Vercel frontend origin + localhost
+- [x] Typecheck passes
 
 ### US-026: Rate Limiting on Agent API
 **Description:** As a developer, I want rate limiting on the agent API so that runaway loops can't spam the database.

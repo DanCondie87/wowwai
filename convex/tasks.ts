@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalQuery, internalMutation } from "./_generated/server";
 
 export const create = mutation({
   args: {
@@ -280,5 +280,62 @@ export const getById = query({
       .collect();
 
     return { ...task, subtasks };
+  },
+});
+
+// --- Internal functions for Agent API (US-025) ---
+
+export const getByCardId = internalQuery({
+  args: { cardId: v.string() },
+  handler: async (ctx, args) => {
+    const tasks = await ctx.db.query("tasks").collect();
+    return tasks.find((t) => t.cardId === args.cardId) ?? null;
+  },
+});
+
+export const agentUpdate = internalMutation({
+  args: {
+    id: v.id("tasks"),
+    status: v.optional(
+      v.union(
+        v.literal("backlog"),
+        v.literal("todo"),
+        v.literal("in-progress"),
+        v.literal("review"),
+        v.literal("done")
+      )
+    ),
+    modelUsed: v.optional(v.string()),
+    sessionSummary: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...fields } = args;
+    const task = await ctx.db.get(id);
+    if (!task) throw new Error("Task not found");
+
+    const now = Date.now();
+    const updates: Record<string, unknown> = { lastTouchedAt: now };
+    const oldStatus = task.status;
+
+    if (fields.status !== undefined && fields.status !== task.status) {
+      updates.status = fields.status;
+      if (fields.status === "done") updates.completedAt = now;
+    }
+    if (fields.modelUsed !== undefined) updates.modelUsed = fields.modelUsed;
+    if (fields.sessionSummary !== undefined) updates.sessionSummary = fields.sessionSummary;
+
+    await ctx.db.patch(id, updates);
+
+    if (fields.status && fields.status !== oldStatus) {
+      await ctx.db.insert("auditLogs", {
+        taskId: id,
+        actor: "dali",
+        action: "moved",
+        before: oldStatus,
+        after: fields.status,
+        modelUsed: fields.modelUsed,
+        timestamp: now,
+      });
+    }
   },
 });
