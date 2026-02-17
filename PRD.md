@@ -537,24 +537,24 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As an AI agent, I want to update task status in Convex when I complete work so that the board reflects real-time progress.
 
 **Acceptance Criteria:**
-- [ ] `lib/agent-client.ts` — helper module that wraps Convex HTTP calls with auth header
-- [ ] Functions: `updateTaskStatus(cardId, status, modelUsed, sessionSummary)`, `addAuditLog(cardId, actor, action, comment, modelUsed)`, `getTask(cardId)`
-- [ ] Uses `CONVEX_SITE_URL` and `AGENT_SECRET` from environment
-- [ ] Example usage documented in `docs/agent-integration.md` showing how a subagent would call these after completing a PRD task
-- [ ] Typecheck passes
+- [x] `lib/agent-client.ts` — helper module that wraps Convex HTTP calls with auth header
+- [x] Functions: `updateTaskStatus(cardId, status, modelUsed, sessionSummary)`, `addAuditLog(cardId, actor, action, comment, modelUsed)`, `getTask(cardId)`
+- [x] Uses `CONVEX_SITE_URL` and `AGENT_SECRET` from environment
+- [x] Example usage documented in `docs/agent-integration.md` showing how a subagent would call these after completing a PRD task
+- [x] Typecheck passes
 
 ### US-041: TASKS.md Migration Script
 **Description:** As a user, I want to import my existing TASKS.md into WOWWAI so that the board starts with real data.
 
 **Acceptance Criteria:**
-- [ ] `scripts/migrate-tasks.ts` — reads a TASKS.md file, parses sections and tasks
-- [ ] Maps sections to projects: each "### Project Name" becomes a project
-- [ ] Maps task status: `[x]` → "done", `[ ]` → "backlog", `[~]` → "in-progress"
-- [ ] Preserves task titles and descriptions
-- [ ] Creates tasks in Convex via HTTP actions (authenticated with AGENT_SECRET)
-- [ ] Outputs summary: "Created X projects, Y tasks"
-- [ ] Dry-run mode (`--dry-run`): prints what would be created without writing
-- [ ] Typecheck passes
+- [x] `scripts/migrate-tasks.ts` — reads a TASKS.md file, parses sections and tasks
+- [x] Maps sections to projects: each "### Project Name" becomes a project
+- [x] Maps task status: `[x]` → "done", `[ ]` → "backlog", `[~]` → "in-progress"
+- [x] Preserves task titles and descriptions
+- [x] Creates tasks in Convex via HTTP actions (authenticated with AGENT_SECRET)
+- [x] Outputs summary: "Created X projects, Y tasks"
+- [x] Dry-run mode (`--dry-run`): prints what would be created without writing
+- [x] Typecheck passes
 
 ---
 
@@ -566,22 +566,22 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a developer, I want a reusable notification function so that WOWWAI can alert Dan via WhatsApp.
 
 **Acceptance Criteria:**
-- [ ] `lib/notifications.ts` — function `notifyDan(message: string)` that sends a WhatsApp message via OpenClaw's message tool pattern
-- [ ] Notification content follows security rules: minimal info, no sensitive project details (e.g., "WOWWAI: 3 tasks need your input" not full task descriptions)
-- [ ] Function is async, handles errors gracefully (logs but doesn't throw)
-- [ ] Documented usage in `docs/notifications.md`
-- [ ] Typecheck passes
+- [x] `lib/notifications.ts` — function `notifyDan(message: string)` that sends a WhatsApp message via OpenClaw's message tool pattern
+- [x] Notification content follows security rules: minimal info, no sensitive project details (e.g., "WOWWAI: 3 tasks need your input" not full task descriptions)
+- [x] Function is async, handles errors gracefully (logs but doesn't throw)
+- [x] Documented usage in `docs/notifications.md`
+- [x] Typecheck passes
 
 ### US-043: Blocker Notification Trigger
 **Description:** As a user, I want to be notified when a task is blocked so that I can unblock it promptly.
 
 **Acceptance Criteria:**
-- [ ] When a task's `blockedBy` array becomes non-empty (via mutation), trigger a notification
-- [ ] Convex scheduled function or mutation hook that detects blocked state change
-- [ ] Notification text: "WOWWAI: {cardId} is blocked — needs your input"
-- [ ] Only notifies if task is assigned to "dali" and blocker requires Dan's action
-- [ ] Respects quiet hours: no notifications between 23:00–08:00 AEST
-- [ ] Typecheck passes
+- [x] When a task's `blockedBy` array becomes non-empty (via mutation), trigger a notification
+- [x] Convex scheduled function or mutation hook that detects blocked state change
+- [x] Notification text: "WOWWAI: {cardId} is blocked — needs your input"
+- [x] Only notifies if task is assigned to "dali" and blocker requires Dan's action
+- [x] Respects quiet hours: no notifications between 23:00–08:00 AEST
+- [x] Typecheck passes
 
 ---
 
@@ -593,24 +593,24 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want basic analytics so that I can understand how work is progressing.
 
 **Acceptance Criteria:**
-- [ ] `convex/analytics.ts` — query `getCycleTime`: calculates average time from "todo" to "done" per project (using createdAt and completedAt)
-- [ ] `convex/analytics.ts` — query `getThroughput`: counts tasks completed per week for the last 8 weeks
-- [ ] `convex/analytics.ts` — query `getBlockerStats`: counts currently blocked tasks per project
-- [ ] `convex/analytics.ts` — query `getModelUsage`: counts tasks completed per model (from modelUsed field)
-- [ ] Typecheck passes
+- [x] `convex/analytics.ts` — query `getCycleTime`: calculates average time from "todo" to "done" per project (using createdAt and completedAt)
+- [x] `convex/analytics.ts` — query `getThroughput`: counts tasks completed per week for the last 8 weeks
+- [x] `convex/analytics.ts` — query `getBlockerStats`: counts currently blocked tasks per project
+- [x] `convex/analytics.ts` — query `getModelUsage`: counts tasks completed per model (from modelUsed field)
+- [x] Typecheck passes
 
 ### US-045: Analytics Dashboard Page
 **Description:** As a user, I want a dashboard showing key metrics so that I can track how we're working.
 
 **Acceptance Criteria:**
-- [ ] Analytics page at `/analytics` with 4 metric cards
-- [ ] Card 1: "Average Cycle Time" — shows days from todo to done, per project
-- [ ] Card 2: "Weekly Throughput" — simple bar chart showing tasks completed per week (last 8 weeks)
-- [ ] Card 3: "Blocked Tasks" — count of currently blocked tasks with list
-- [ ] Card 4: "Model Usage" — pie/donut chart showing task completions by AI model
-- [ ] Charts use a lightweight library (recharts or similar)
-- [ ] Responsive: cards stack vertically on mobile
-- [ ] Typecheck passes
+- [x] Analytics page at `/analytics` with 4 metric cards
+- [x] Card 1: "Average Cycle Time" — shows days from todo to done, per project
+- [x] Card 2: "Weekly Throughput" — simple bar chart showing tasks completed per week (last 8 weeks)
+- [x] Card 3: "Blocked Tasks" — count of currently blocked tasks with list
+- [x] Card 4: "Model Usage" — pie/donut chart showing task completions by AI model
+- [x] Charts use a lightweight library (recharts or similar)
+- [x] Responsive: cards stack vertically on mobile
+- [x] Typecheck passes
 - [ ] Verify analytics page renders in browser
 
 ---
@@ -623,22 +623,22 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want AI-powered priority recommendations so that I can make better decisions about what to focus on.
 
 **Acceptance Criteria:**
-- [ ] Button on Board page: "🤖 What should I work on?"
-- [ ] Clicking it: sends current task state (open tasks, blocked tasks, priorities, staleness) to a Convex action that calls an AI model
-- [ ] AI returns top 3 recommended tasks with reasoning (e.g., "Unblock WOWWAI-12 — it's been stuck 3 days and blocks 2 other tasks")
-- [ ] Recommendations displayed in a modal/panel
-- [ ] Typecheck passes
+- [x] Button on Board page: "🤖 What should I work on?"
+- [x] Clicking it: sends current task state (open tasks, blocked tasks, priorities, staleness) to a Convex action that calls an AI model
+- [x] AI returns top 3 recommended tasks with reasoning (e.g., "Unblock WOWWAI-12 — it's been stuck 3 days and blocks 2 other tasks")
+- [x] Recommendations displayed in a modal/panel
+- [x] Typecheck passes
 - [ ] Verify button and response display in browser
 
 ### US-047: AI Activity Presence Indicator
 **Description:** As a user, I want to see when Dali is actively working on a task so that I know work is in progress.
 
 **Acceptance Criteria:**
-- [ ] `agentActivity` table populated by agent API: when a subagent starts working, it calls an HTTP action to set status "working" with currentAction text
-- [ ] Board cards show a pulsing 🦈 indicator when agentActivity has an active "working" entry for that task
-- [ ] Hovering/tapping the indicator shows: model being used, currentAction text, time started
-- [ ] Activity auto-expires after 30 minutes of no heartbeat update (Convex cron job sets status to "idle")
-- [ ] Typecheck passes
+- [x] `agentActivity` table populated by agent API: when a subagent starts working, it calls an HTTP action to set status "working" with currentAction text
+- [x] Board cards show a pulsing 🦈 indicator when agentActivity has an active "working" entry for that task
+- [x] Hovering/tapping the indicator shows: model being used, currentAction text, time started
+- [x] Activity auto-expires after 30 minutes of no heartbeat update (Convex cron job sets status to "idle")
+- [x] Typecheck passes
 - [ ] Verify presence indicator in browser
 
 ---
@@ -651,23 +651,23 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a mobile user, I want to swipe cards to quickly change their status so that I can manage tasks with one hand.
 
 **Acceptance Criteria:**
-- [ ] Swipe right on a card: moves it to the next column (e.g., "To Do" → "In Progress")
-- [ ] Swipe left on a card: moves it to the previous column
-- [ ] Swipe action shows a color-coded background (green for forward, orange for backward) with an arrow icon
-- [ ] Haptic feedback hint via CSS animation (scale bounce on complete)
-- [ ] Only active on mobile viewports (touch devices)
-- [ ] Typecheck passes
+- [x] Swipe right on a card: moves it to the next column (e.g., "To Do" → "In Progress")
+- [x] Swipe left on a card: moves it to the previous column
+- [x] Swipe action shows a color-coded background (green for forward, orange for backward) with an arrow icon
+- [x] Haptic feedback hint via CSS animation (scale bounce on complete)
+- [x] Only active on mobile viewports (touch devices)
+- [x] Typecheck passes
 - [ ] Verify swipe works on mobile viewport in browser
 
 ### US-049: Pull to Refresh
 **Description:** As a mobile user, I want to pull down to refresh the board so that I can see the latest state.
 
 **Acceptance Criteria:**
-- [ ] Pull-to-refresh gesture on the board page triggers Convex query invalidation
-- [ ] Loading spinner shown during refresh
-- [ ] Works on both Board and My Work pages
-- [ ] Only active on mobile/touch viewports
-- [ ] Typecheck passes
+- [x] Pull-to-refresh gesture on the board page triggers Convex query invalidation
+- [x] Loading spinner shown during refresh
+- [x] Works on both Board and My Work pages
+- [x] Only active on mobile/touch viewports
+- [x] Typecheck passes
 
 ---
 
@@ -679,25 +679,25 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a user, I want the app to show cached data when offline so that I can still review my board without internet.
 
 **Acceptance Criteria:**
-- [ ] Next.js PWA setup with service worker (next-pwa or similar)
-- [ ] Service worker caches the app shell (HTML, CSS, JS)
-- [ ] Last known board state cached in IndexedDB (via Convex's offline support or custom cache)
-- [ ] When offline: board renders from cache with "Offline — read only" banner at top
-- [ ] Mutations disabled when offline (buttons grayed out with tooltip "You're offline")
-- [ ] When back online: banner disappears, queries re-sync automatically
-- [ ] Typecheck passes
+- [x] Next.js PWA setup with service worker (next-pwa or similar)
+- [x] Service worker caches the app shell (HTML, CSS, JS)
+- [x] Last known board state cached in IndexedDB (via Convex's offline support or custom cache)
+- [x] When offline: board renders from cache with "Offline — read only" banner at top
+- [x] Mutations disabled when offline (buttons grayed out with tooltip "You're offline")
+- [x] When back online: banner disappears, queries re-sync automatically
+- [x] Typecheck passes
 - [ ] Verify offline mode in browser (DevTools → Network → Offline)
 
 ### US-051: Nightly Backup Script
 **Description:** As a developer, I want automated nightly backups so that data is never lost.
 
 **Acceptance Criteria:**
-- [ ] `scripts/backup.ts` — exports all Convex data (projects, tasks, ideas, audit logs, workflow templates, workflow steps) as JSON
-- [ ] Saves to `backups/backup-YYYY-MM-DD.json` in workspace
-- [ ] Auto-deletes backups older than 30 days
-- [ ] Windows Task Scheduler instruction in README for nightly execution
-- [ ] Script uses AGENT_SECRET for authenticated Convex HTTP calls
-- [ ] Typecheck passes
+- [x] `scripts/backup.ts` — exports all Convex data (projects, tasks, ideas, audit logs, workflow templates, workflow steps) as JSON
+- [x] Saves to `backups/backup-YYYY-MM-DD.json` in workspace
+- [x] Auto-deletes backups older than 30 days
+- [x] Windows Task Scheduler instruction in README for nightly execution
+- [x] Script uses AGENT_SECRET for authenticated Convex HTTP calls
+- [x] Typecheck passes
 
 ---
 
@@ -709,11 +709,11 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 **Description:** As a desktop user, I want keyboard shortcuts so that I can navigate and act without reaching for the mouse.
 
 **Acceptance Criteria:**
-- [ ] Global keyboard listener (disabled when input/textarea is focused)
-- [ ] Shortcuts: `n` (new task in current/first column), `e` (edit selected card), `j`/`k` (navigate between cards), `→`/`←` (move selected card to next/previous column), `/` (focus search), `g b` (go to board), `g w` (go to workflows), `g a` (go to analytics)
-- [ ] `?` opens a shortcuts help modal listing all shortcuts
-- [ ] Selected card has a visible focus ring
-- [ ] Typecheck passes
+- [x] Global keyboard listener (disabled when input/textarea is focused)
+- [x] Shortcuts: `n` (new task in current/first column), `e` (edit selected card), `j`/`k` (navigate between cards), `→`/`←` (move selected card to next/previous column), `/` (focus search), `g b` (go to board), `g w` (go to workflows), `g a` (go to analytics)
+- [x] `?` opens a shortcuts help modal listing all shortcuts
+- [x] Selected card has a visible focus ring
+- [x] Typecheck passes
 - [ ] Verify shortcuts work in browser
 
 ---
@@ -731,8 +731,8 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 - [ ] Vercel project connected to GitHub repo (auto-deploy on push)
 - [ ] Environment variables configured in Vercel: Clerk keys, Convex URL, Convex deploy key
 - [ ] Production URL accessible and shows login page
-- [ ] README.md with: project description, setup instructions (local dev + Convex + Clerk), deployment notes
-- [ ] Typecheck passes
+- [x] README.md with: project description, setup instructions (local dev + Convex + Clerk), deployment notes
+- [x] Typecheck passes
 - [ ] Verify production URL loads and auth works
 
 ---

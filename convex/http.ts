@@ -334,4 +334,127 @@ http.route({
   }),
 });
 
+// --- Agent Activity Endpoints (US-047) ---
+
+http.route({
+  path: "/agent/startActivity",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+http.route({
+  path: "/agent/startActivity",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!verifySecret(request)) return unauthorized(origin);
+
+    const body = await request.json();
+    const { cardId, sessionKey, model, currentAction } = body;
+
+    if (!sessionKey || !model) {
+      return new Response(
+        JSON.stringify({ error: "sessionKey and model are required" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+      );
+    }
+
+    let taskId = undefined;
+    if (cardId) {
+      const task = await ctx.runQuery(internal.tasks.getByCardId, { cardId });
+      if (task) taskId = task._id;
+    }
+
+    const now = Date.now();
+    await ctx.runMutation(internal.agentActivity.upsertActivity, {
+      taskId,
+      sessionKey,
+      model,
+      status: "working",
+      currentAction: currentAction ?? null,
+      startedAt: now,
+      lastHeartbeat: now,
+    });
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+    );
+  }),
+});
+
+http.route({
+  path: "/agent/heartbeat",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+http.route({
+  path: "/agent/heartbeat",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!verifySecret(request)) return unauthorized(origin);
+
+    const body = await request.json();
+    const { sessionKey, currentAction } = body;
+
+    if (!sessionKey) {
+      return new Response(
+        JSON.stringify({ error: "sessionKey is required" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+      );
+    }
+
+    await ctx.runMutation(internal.agentActivity.heartbeat, {
+      sessionKey,
+      currentAction: currentAction ?? null,
+    });
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+    );
+  }),
+});
+
+// --- Backup Endpoint (US-051) ---
+
+http.route({
+  path: "/agent/backup",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+http.route({
+  path: "/agent/backup",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!verifySecret(request)) return unauthorized(origin);
+
+    const data = await ctx.runQuery(internal.export.getFullBackup, {});
+
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    });
+  }),
+});
+
 export default http;

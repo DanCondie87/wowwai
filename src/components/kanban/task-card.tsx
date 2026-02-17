@@ -2,7 +2,8 @@
 
 import { Doc } from "../../../convex/_generated/dataModel";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, getTagColor } from "@/lib/utils";
+import { AgentActivityIndicator } from "./agent-activity-indicator";
 
 interface TaskCardProps {
   task: Doc<"tasks">;
@@ -102,14 +103,21 @@ export function TaskCard({
         {/* Tags */}
         {task.tags.length > 0 && (
           <div className="mt-1.5 flex flex-wrap gap-1">
-            {visibleTags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-secondary-foreground"
-              >
-                {tag}
-              </span>
-            ))}
+            {visibleTags.map((tag) => {
+              const color = getTagColor(tag);
+              return (
+                <span
+                  key={tag}
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[10px] font-medium",
+                    color.bg,
+                    color.text
+                  )}
+                >
+                  {tag}
+                </span>
+              );
+            })}
             {overflowCount > 0 && (
               <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                 +{overflowCount}
@@ -135,18 +143,23 @@ export function TaskCard({
           </div>
         )}
 
-        {/* Bottom row: blocked badge + assignee */}
+        {/* Bottom row: blocked badge + AI activity + assignee */}
         <div className="mt-2 flex items-center justify-between">
-          {isBlocked ? (
-            <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
-              BLOCKED
-            </Badge>
-          ) : (
-            <span />
-          )}
-          <span className="text-sm" title={`Assigned to ${task.assignee}`}>
-            {task.assignee === "dali" ? "\u{1F988}" : "\u{1F464}"}
-          </span>
+          <div className="flex items-center gap-1">
+            {isBlocked ? (
+              <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
+                BLOCKED
+              </Badge>
+            ) : (
+              <span />
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            <AgentActivityIndicator taskId={task._id} />
+            <span className="text-sm" title={`Assigned to ${task.assignee}`}>
+              {task.assignee === "dali" ? "\u{1F988}" : "\u{1F464}"}
+            </span>
+          </div>
         </div>
       </div>
     </div>

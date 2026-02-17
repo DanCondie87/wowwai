@@ -429,6 +429,65 @@
 - Board page updated with RecommendButton in header area
 - Typecheck passes
 
+## US-047: AI Activity Presence Indicator [DONE]
+- convex/agentActivity.ts: getActiveByTaskId, getAllActive queries; upsertActivity, heartbeat, expireStale internal mutations
+- AgentActivityIndicator component: pulsing shark emoji with tooltip (model, currentAction, time started)
+- Integrated into TaskCard bottom row alongside assignee avatar
+- HTTP endpoints: POST /agent/startActivity (upserts session), POST /agent/heartbeat (updates heartbeat)
+- Activity auto-expires after 30 minutes of no heartbeat (expireStale mutation)
+- Typecheck passes
+
+## US-048: Mobile Swipe Gestures on Cards [DONE]
+- SwipeableTaskCard component: touch handlers for horizontal swipe detection
+- Swipe right = move to next column, swipe left = previous column
+- Green background with arrow for forward, orange for backward (threshold 80px)
+- Calls tasks.moveToColumn mutation on release past threshold
+- Integrated into mobile KanbanColumn view (isMobile prop, lg:hidden rendering)
+- useSwipeGesture hook: generic swipe detection with configurable threshold
+- Typecheck passes
+
+## US-049: Pull to Refresh [DONE]
+- PullToRefresh component: pull-down gesture with 80px threshold, dampened distance (40%)
+- Loading spinner with "Release to refresh" label
+- Only shown on mobile (lg:hidden)
+- Integrated into Board page (wraps entire board) and My Work page
+- Convex reactive queries auto-re-sync; pull triggers a visual refresh cycle
+- Typecheck passes
+
+## US-050: Service Worker for Offline Read [DONE]
+- public/sw.js: service worker caching app shell (/, /board, /my-work, /workflows, /analytics, /settings)
+- Network-first for navigation, cache-first for static assets (/_next/static/)
+- Skips Convex and Clerk API calls
+- ServiceWorkerRegister component: registers SW in production only
+- OfflineBanner component: yellow "Offline — read only" banner on offline event
+- public/manifest.json: PWA manifest with standalone display, dark background
+- Layout.tsx: manifest link, theme-color, apple-mobile-web-app meta tags
+- Typecheck passes
+
+## US-051: Nightly Backup Script [DONE]
+- scripts/backup.ts: exports all Convex data via GET /agent/backup HTTP endpoint
+- Saves to backups/backup-YYYY-MM-DD.json in workspace
+- Auto-deletes backups older than 30 days
+- convex/export.ts: getFullBackup internalQuery returns all 6 tables
+- convex/http.ts: GET /agent/backup endpoint (authenticated with x-agent-secret)
+- Windows Task Scheduler instruction in script header comments
+- Typecheck passes
+
+## US-052: Keyboard Shortcuts [DONE]
+- useKeyboardShortcuts hook: global keydown listener, disabled when input/textarea focused
+- Shortcuts: n (new task), e (edit selected), j/k (navigate cards), arrows (move card columns), / (search), ? (help)
+- g-prefix sequences: g+b (board), g+w (workflows), g+a (analytics), g+m (my work), g+s (settings)
+- Board page: selectedCardId state for j/k navigation with visible focus ring (ring-2 ring-primary)
+- Arrow keys call moveToColumn mutation to move selected card between columns
+- KeyboardShortcutsDialog: shadcn Dialog listing all shortcuts by category
+- Typecheck passes
+
+## US-053: Prepare for Deployment [DONE]
+- README.md: comprehensive setup instructions — prerequisites, local dev, Convex setup, sync agent, Vercel deployment
+- Project structure, scripts, keyboard shortcuts table
+- Environment variables table for Vercel configuration
+- Typecheck passes
+
 ## Learnings
 - Convex 1.31 uses *Generic pattern (mutationGeneric, queryGeneric) not *Builder
 - _generated stubs must use typeof import("convex/server").mutationGeneric for type compat
