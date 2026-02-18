@@ -105,20 +105,9 @@ Both new API routes need `AGENT_SECRET` to call the Convex HTTP endpoints. Verif
 
 `NEXT_PUBLIC_CONVEX_SITE_URL` must also be set (already is in `.env.local`).
 
-### Remaining Public Convex Mutations (Documented Decision)
+### Remaining Public Convex Mutations (Resolved in Phase 3)
 
-The following Convex mutations remain public — risk documented but not fixed in this PR:
-
-| Mutation | Risk | Notes |
-|----------|------|-------|
-| `tasks.create/update/moveToColumn/reorder` | Data modification | Attacker can CRUD tasks. Annoying, not catastrophic. |
-| `projects.create/update` | Data modification | Same as above |
-| `tasks.getAll/getById/getByProject` | Data read | Exposes task data to anyone with Convex URL |
-| `auditLogs.*` | Data read | Exposes audit history |
-
-**Rationale for deferral:** Moving all frontend Convex calls through Next.js API routes would require significant refactoring of every page and component. For a single-user personal tool, the risk is moderate — the app isn't a high-value target and the Convex URL is semi-obscure. Full remediation is tracked as a follow-up.
-
-**Full fix path (future work):** Implement Convex custom auth using a session-derived JWT passed from the Next.js server side. See Convex docs on custom auth providers.
+All write mutations originally deferred in SEC-003 have been fixed. See **SEC-005** below.
 
 ---
 
@@ -164,6 +153,56 @@ Tailwind CSS and shadcn/ui generate inline styles that cannot be hashed or nonce
 
 ---
 
+---
+
+## SEC-005: Remaining Unauthenticated Convex Mutations
+
+### Vulnerability
+All write mutations deferred in SEC-003 remained accessible to anyone with the Convex URL:
+- `tasks.create`, `tasks.update`, `tasks.moveToColumn`, `tasks.reorder`
+- `projects.create`, `projects.update`, `projects.archive`
+- `auditLogs.create` — **especially dangerous** (fake audit trail injection)
+- `seed.seedAll`, `seed.seedReviewProject`, `seed.seedWorkflows` — **could reset entire DB**
+
+### Fix
+
+#### All write mutations → `internalMutation`
+- `convex/tasks.ts`: `create`, `update`, `moveToColumn`, `reorder` → `internalMutation`
+- `convex/projects.ts`: `create`, `update`, `archive` → `internalMutation`
+- `convex/auditLogs.ts`: public `create` → `internalMutation` (fake entries risk)
+- `convex/seed.ts`: all three seed mutations → `internalMutation` (DB reset risk)
+
+#### New Convex HTTP action: `POST /mutations`
+- `convex/http.ts`: Batch endpoint routing to internal mutations
+- Validates `x-agent-secret` before routing
+- Allowlisted mutations only — unknown names return 400
+
+#### New Next.js API route: `POST /api/mutations`
+- `src/app/api/mutations/route.ts`
+- Verifies session cookie via `verifySessionToken`
+- Server-side allowlist (double-check before forwarding to Convex)
+- Proxies to `POST /mutations` HTTP action with `AGENT_SECRET`
+
+#### Frontend migration: `useAuthMutation` hook
+- `src/lib/use-auth-mutation.ts`: Drop-in replacement for Convex `useMutation`
+- All 6 frontend components updated:
+  - `kanban-board.tsx`, `swipeable-task-card.tsx` → `tasks.moveToColumn`, `tasks.reorder`
+  - `card-detail-sheet.tsx`, `blocker-list.tsx` → `tasks.update`
+  - `create-task-dialog.tsx`, `subtask-list.tsx` → `tasks.create`
+  - `board/page.tsx` → `tasks.moveToColumn` (keyboard shortcuts)
+
+### Read queries remain public
+`tasks.getAll`, `tasks.getById`, `tasks.getByProject`, `auditLogs.getByTask`, etc. remain
+public queries. Read-only access to task data is an accepted risk for a single-user personal
+tool (no PII, no financial data, data isn't sensitive beyond personal productivity notes).
+
+### Required Environment Variables
+`/api/mutations` needs:
+- `NEXT_PUBLIC_CONVEX_SITE_URL` — Convex HTTP endpoint base URL
+- `AGENT_SECRET` — Shared secret (same as existing agent endpoints)
+
+---
+
 ## Build Verification
 ```
 cd ~/Projects/wowwai
@@ -173,7 +212,7 @@ Verified after all changes. App builds successfully.
 
 ---
 
-## Pre-deploy Checklist
+## Pre-deploy Checklist (Updated for Phase 3)
 Before deploying `security/critical-fixes` to production:
 
 1. [ ] Verify `AGENT_SECRET` is set in Vercel environment (production + preview)
@@ -185,3 +224,7 @@ Before deploying `security/critical-fixes` to production:
 7. [ ] Test `x-middleware-subrequest` header returns 403
 8. [ ] Review `'strict-dynamic'` CSP in browser — check console for CSP violations
 9. [ ] Test Convex WebSocket connections still work (wss:// in connect-src)
+10. [ ] Test `/api/mutations` endpoint — create, update, move task in browser
+11. [ ] Verify seed mutations are no longer callable from Convex dashboard public API
+12. [ ] Test error boundaries — kill Convex connection, verify graceful error UI
+13. [ ] Test toast notifications — trigger a 401 from /api/mutations, verify toast appears
