@@ -1,6 +1,14 @@
-import { query, internalQuery } from "./_generated/server";
+import { internalQuery } from "./_generated/server";
 
-export const getFullExport = query({
+// SEC-003: getFullExport converted from public query to internalQuery.
+// It was previously callable by anyone with the Convex URL, exposing all
+// projects, tasks, ideas, and audit logs without authentication.
+//
+// The settings page now fetches export data via the authenticated Next.js
+// API route /api/export, which verifies the session cookie before proxying
+// to the /agent/backup Convex HTTP endpoint (AGENT_SECRET protected).
+
+export const getFullExport = internalQuery({
   args: {},
   handler: async (ctx) => {
     const projects = await ctx.db.query("projects").collect();

@@ -1,9 +1,21 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
+// SEC-003: Export data now fetched via the authenticated /api/export Next.js route
+// instead of directly via useQuery(api.export.getFullExport).
+// The direct Convex query was unauthenticated and accessible to anyone with the Convex URL.
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+
+interface ExportData {
+  projects: Array<Record<string, unknown>>;
+  tasks: Array<Record<string, unknown>>;
+  ideas: Array<Record<string, unknown>>;
+  auditLogs: Array<Record<string, unknown>>;
+  workflowTemplates?: Array<Record<string, unknown>>;
+  workflowSteps?: Array<Record<string, unknown>>;
+}
 
 function downloadFile(content: string, filename: string, type: string) {
   const blob = new Blob([content], { type });
@@ -48,7 +60,23 @@ function tasksToCsv(
 }
 
 export default function SettingsPage() {
-  const exportData = useQuery(api.export.getFullExport);
+  const [exportData, setExportData] = useState<ExportData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/export")
+      .then((res) => {
+        if (!res.ok) throw new Error(`Export fetch failed: ${res.status}`);
+        return res.json() as Promise<ExportData>;
+      })
+      .then(setExportData)
+      .catch((err) => {
+        console.error("Failed to load export data:", err);
+        setError("Failed to load export data. Please refresh and try again.");
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   function handleExportJson() {
     if (!exportData) return;
@@ -100,8 +128,11 @@ export default function SettingsPage() {
           </Button>
         </div>
 
-        {!exportData && (
+        {loading && (
           <p className="text-xs text-muted-foreground">Loading data...</p>
+        )}
+        {error && (
+          <p className="text-xs text-destructive">{error}</p>
         )}
       </div>
     </div>

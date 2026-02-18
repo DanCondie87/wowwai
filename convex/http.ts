@@ -357,6 +357,52 @@ http.route({
   }),
 });
 
+// POST /sync/enqueue — web UI queues a to-local file sync (SEC-003)
+// Called by the Next.js /api/sync/enqueue route (session-verified) with AGENT_SECRET.
+// The public fileSyncQueue.enqueue mutation was removed to prevent unauthenticated
+// file write injection via direct Convex API calls.
+http.route({
+  path: "/sync/enqueue",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+http.route({
+  path: "/sync/enqueue",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!(await verifySecret(request))) return unauthorized(origin);
+
+    const body = await request.json();
+    const { filePath, content, direction, status } = body;
+
+    if (!filePath || content === undefined || !direction || !status) {
+      return new Response(
+        JSON.stringify({ error: "filePath, content, direction, and status are required" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+      );
+    }
+
+    await ctx.runMutation(internal.fileSyncQueue.enqueueInternal, {
+      filePath,
+      content,
+      direction,
+      status,
+    });
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders(origin) } }
+    );
+  }),
+});
+
 // --- Agent Activity Endpoints (US-047) ---
 
 http.route({

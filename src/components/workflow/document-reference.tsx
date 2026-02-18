@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+// Note: api.fileSyncQueue.enqueue import removed (SEC-003 — now routed via /api/sync/enqueue)
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Markdown } from "@/components/ui/markdown";
@@ -69,7 +70,25 @@ export function DocumentReference({ reference }: DocumentReferenceProps) {
   );
 
   const createVersion = useMutation(api.fileVersions.createVersion);
-  const enqueueSync = useMutation(api.fileSyncQueue.enqueue);
+
+  // SEC-003: enqueue is now called via the authenticated /api/sync/enqueue Next.js
+  // route instead of the direct Convex mutation (which was publicly accessible).
+  async function enqueueSync(args: {
+    filePath: string;
+    content: string;
+    direction: string;
+    status: string;
+  }) {
+    const res = await fetch("/api/sync/enqueue", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(args),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error((data as { error?: string }).error ?? "Sync enqueue failed");
+    }
+  }
 
   const content = latestVersion?.content ?? reference.content;
   const hasSyncedContent = latestVersion !== null && latestVersion !== undefined;
