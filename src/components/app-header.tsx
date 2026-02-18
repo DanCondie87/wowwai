@@ -40,10 +40,17 @@ export function AppHeader({ onMenuToggle, onSearchClick }: AppHeaderProps) {
           <span className="sr-only">Search</span>
         </Button>
         <ThemeToggle />
-        {/* TODO: Replace with Clerk <UserButton /> when keys are available */}
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={async () => {
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/login";
+          }}
+          title="Log out"
+        >
           <User className="h-5 w-5" />
-          <span className="sr-only">User menu</span>
+          <span className="sr-only">Log out</span>
         </Button>
       </div>
     </header>
