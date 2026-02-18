@@ -22,11 +22,34 @@ function corsHeaders(origin: string | null): Record<string, string> {
   };
 }
 
-function verifySecret(request: Request): boolean {
+/**
+ * Timing-safe secret verification for Convex HTTP actions.
+ *
+ * Uses HMAC-SHA256 with a random one-time key to prevent timing attacks.
+ * Convex HTTP actions have access to the Web Crypto API (crypto.subtle).
+ */
+async function verifySecret(request: Request): Promise<boolean> {
   const secret = request.headers.get("x-agent-secret");
   const expected = process.env.AGENT_SECRET;
   if (!expected || !secret) return false;
-  return secret === expected;
+
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.generateKey(
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const [macA, macB] = await Promise.all([
+    crypto.subtle.sign("HMAC", key, encoder.encode(secret)),
+    crypto.subtle.sign("HMAC", key, encoder.encode(expected)),
+  ]);
+  const a32 = new Uint8Array(macA);
+  const b32 = new Uint8Array(macB);
+  let diff = 0;
+  for (let i = 0; i < 32; i++) {
+    diff |= a32[i] ^ b32[i];
+  }
+  return diff === 0;
 }
 
 function unauthorized(origin: string | null): Response {
@@ -90,7 +113,7 @@ http.route({
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const rl = await ctx.runMutation(internal.rateLimiter.checkAgentRateLimit, {});
     if (!rl.ok) return tooManyRequests(origin, rl.retryAt);
@@ -143,7 +166,7 @@ http.route({
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const rl = await ctx.runMutation(internal.rateLimiter.checkAgentRateLimit, {});
     if (!rl.ok) return tooManyRequests(origin, rl.retryAt);
@@ -187,7 +210,7 @@ http.route({
   method: "GET",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const rl = await ctx.runMutation(internal.rateLimiter.checkAgentRateLimit, {});
     if (!rl.ok) return tooManyRequests(origin, rl.retryAt);
@@ -259,7 +282,7 @@ http.route({
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const body = await request.json();
     const { filePath, content, editedBy } = body;
@@ -291,7 +314,7 @@ http.route({
   method: "GET",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const items = await ctx.runQuery(internal.fileSyncQueue.getPendingInternal, {
       direction: "to-local",
@@ -310,7 +333,7 @@ http.route({
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const body = await request.json();
     const { id, status } = body;
@@ -352,7 +375,7 @@ http.route({
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const body = await request.json();
     const { cardId, sessionKey, model, currentAction } = body;
@@ -404,7 +427,7 @@ http.route({
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const body = await request.json();
     const { sessionKey, currentAction } = body;
@@ -446,7 +469,7 @@ http.route({
   method: "GET",
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get("Origin");
-    if (!verifySecret(request)) return unauthorized(origin);
+    if (!(await verifySecret(request))) return unauthorized(origin);
 
     const data = await ctx.runQuery(internal.export.getFullBackup, {});
 
