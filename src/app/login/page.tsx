@@ -14,11 +14,16 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
+    // Read directly from the form input to handle browser autofill
+    const form = e.target as HTMLFormElement;
+    const input = form.querySelector('input[type="password"]') as HTMLInputElement;
+    const submittedPassword = input?.value || password;
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password: submittedPassword }),
       });
 
       const data = await res.json();
@@ -67,7 +72,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading || !password}
+            disabled={loading}
             className="w-full rounded-lg bg-white px-4 py-3 font-medium text-black transition hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Verifying..." : "Log in"}
