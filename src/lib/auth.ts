@@ -7,13 +7,13 @@ const AUTH_COOKIE = "wowwai_session";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 function getSecret(): string {
-  const secret = process.env.AUTH_SECRET;
+  const secret = process.env.AUTH_SECRET?.trim();
   if (!secret) throw new Error("AUTH_SECRET env var is required");
   return secret;
 }
 
 function getPasswordHash(): string {
-  const hash = process.env.AUTH_PASSWORD_HASH;
+  const hash = process.env.AUTH_PASSWORD_HASH?.trim();
   if (!hash) throw new Error("AUTH_PASSWORD_HASH env var is required");
   return hash;
 }
