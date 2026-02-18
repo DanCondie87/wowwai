@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, type TouchEvent } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 import { Doc } from "../../../convex/_generated/dataModel";
+import { useAuthMutation } from "@/lib/use-auth-mutation";
 import { COLUMNS, type TaskStatus } from "@/lib/columns";
 import { TaskCard } from "./task-card";
 import { cn } from "@/lib/utils";
@@ -29,7 +29,7 @@ export function SwipeableTaskCard({
   const startX = useRef(0);
   const startY = useRef(0);
   const isHorizontal = useRef<boolean | null>(null);
-  const moveToColumn = useMutation(api.tasks.moveToColumn);
+  const moveToColumn = useAuthMutation<Record<string, unknown>>("tasks.moveToColumn");
 
   const columnIndex = COLUMNS.findIndex((c) => c.id === task.status);
 
@@ -74,8 +74,9 @@ export function SwipeableTaskCard({
             status: targetStatus,
             position: 0,
           });
-        } catch (error) {
-          console.error("Failed to move task:", error);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : "Failed to move task";
+          toast.error(message);
         }
       }
     }

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
+import { useAuthMutation } from "@/lib/use-auth-mutation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,7 +48,7 @@ export function BlockerList({
 }: BlockerListProps) {
   const [showPicker, setShowPicker] = useState(false);
   const projectTasks = useQuery(api.tasks.getByProject, { projectId });
-  const updateTask = useMutation(api.tasks.update);
+  const updateTask = useAuthMutation<Record<string, unknown>>("tasks.update");
 
   // Resolve blocker task details
   const blockerDetails = (projectTasks ?? []).filter((t) =>
@@ -60,13 +62,23 @@ export function BlockerList({
 
   async function handleAddBlocker(blockerId: string) {
     const newBlockedBy = [...blockedBy, blockerId as Id<"tasks">];
-    await updateTask({ id: taskId, blockedBy: newBlockedBy });
-    setShowPicker(false);
+    try {
+      await updateTask({ id: taskId, blockedBy: newBlockedBy });
+      setShowPicker(false);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to add blocker";
+      toast.error(message);
+    }
   }
 
   async function handleRemoveBlocker(blockerId: Id<"tasks">) {
     const newBlockedBy = blockedBy.filter((id) => id !== blockerId);
-    await updateTask({ id: taskId, blockedBy: newBlockedBy });
+    try {
+      await updateTask({ id: taskId, blockedBy: newBlockedBy });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to remove blocker";
+      toast.error(message);
+    }
   }
 
   return (

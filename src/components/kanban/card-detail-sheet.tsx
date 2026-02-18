@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../convex/_generated/api";
+import { useAuthMutation } from "@/lib/use-auth-mutation";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import {
   Sheet,
@@ -55,7 +57,7 @@ export function CardDetailSheet({
     api.tasks.getById,
     taskId ? { id: taskId } : "skip"
   );
-  const updateTask = useMutation(api.tasks.update);
+  const updateTask = useAuthMutation<{ id: string; [key: string]: unknown }>("tasks.update");
   const [savedMessage, setSavedMessage] = useState(false);
 
   const task = taskData
@@ -77,8 +79,13 @@ export function CardDetailSheet({
     const currentValue = (task as Record<string, unknown>)[field];
     if (JSON.stringify(currentValue) === JSON.stringify(value)) return;
 
-    await updateTask({ id: taskId, [field]: value });
-    showSaved();
+    try {
+      await updateTask({ id: taskId as string, [field]: value });
+      showSaved();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Save failed";
+      toast.error(`Failed to save ${field}: ${message}`);
+    }
   }
 
   async function handleSelectChange(
@@ -86,8 +93,13 @@ export function CardDetailSheet({
     value: string
   ) {
     if (!taskId) return;
-    await updateTask({ id: taskId, [field]: value });
-    showSaved();
+    try {
+      await updateTask({ id: taskId as string, [field]: value });
+      showSaved();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Save failed";
+      toast.error(`Failed to update ${field}: ${message}`);
+    }
   }
 
   const projectMap = new Map(projects.map((p) => [p._id, p]));

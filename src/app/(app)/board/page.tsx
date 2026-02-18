@@ -2,8 +2,10 @@
 
 import { Suspense, useState, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
+import { toast } from "sonner";
 import { api } from "../../../../convex/_generated/api";
+import { useAuthMutation } from "@/lib/use-auth-mutation";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { KanbanBoard } from "@/components/kanban/kanban-board";
 import { CreateTaskDialog } from "@/components/kanban/create-task-dialog";
@@ -77,7 +79,7 @@ function BoardPageContent() {
   const [detailTaskId, setDetailTaskId] = useState<Id<"tasks"> | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<Id<"tasks"> | null>(null);
-  const moveToColumn = useMutation(api.tasks.moveToColumn);
+  const moveToColumn = useAuthMutation<Record<string, unknown>>("tasks.moveToColumn");
 
   // All visible top-level tasks for j/k navigation
   const visibleTasks = useMemo(
@@ -137,7 +139,8 @@ function BoardPageContent() {
       if (!task) return;
       const colIdx = COLUMNS.findIndex((c) => c.id === task.status);
       if (colIdx < COLUMNS.length - 1) {
-        moveToColumn({ id: selectedCardId, status: COLUMNS[colIdx + 1].id, position: 0 });
+        moveToColumn({ id: selectedCardId, status: COLUMNS[colIdx + 1].id, position: 0 })
+          .catch((err) => toast.error(err instanceof Error ? err.message : "Move failed"));
       }
     },
     onMoveLeft: () => {
@@ -146,7 +149,8 @@ function BoardPageContent() {
       if (!task) return;
       const colIdx = COLUMNS.findIndex((c) => c.id === task.status);
       if (colIdx > 0) {
-        moveToColumn({ id: selectedCardId, status: COLUMNS[colIdx - 1].id, position: 0 });
+        moveToColumn({ id: selectedCardId, status: COLUMNS[colIdx - 1].id, position: 0 })
+          .catch((err) => toast.error(err instanceof Error ? err.message : "Move failed"));
       }
     },
     onFocusSearch: () => {

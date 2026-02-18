@@ -4,6 +4,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexClientProvider } from "@/components/convex-provider";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { OfflineBanner } from "@/components/offline-banner";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { ConvexErrorBoundary } from "@/components/convex-error-boundary";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,18 +40,26 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ConvexClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <OfflineBanner />
-            {children}
-            <ServiceWorkerRegister />
-          </ThemeProvider>
-        </ConvexClientProvider>
+        {/* Root error boundary — catches catastrophic errors before anything renders */}
+        <ErrorBoundary>
+          <ConvexClientProvider>
+            {/* Convex-aware boundary — detects backend connection failures */}
+            <ConvexErrorBoundary>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <OfflineBanner />
+                {children}
+                <ServiceWorkerRegister />
+                {/* Toast notifications for mutation feedback */}
+                <Toaster richColors position="bottom-right" />
+              </ThemeProvider>
+            </ConvexErrorBoundary>
+          </ConvexClientProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

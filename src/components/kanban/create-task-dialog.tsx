@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
+import { useAuthMutation } from "@/lib/use-auth-mutation";
 import { type TaskStatus } from "@/lib/columns";
 import {
   Dialog,
@@ -37,7 +37,7 @@ export function CreateTaskDialog({
   defaultStatus,
   projects,
 }: CreateTaskDialogProps) {
-  const createTask = useMutation(api.tasks.create);
+  const createTask = useAuthMutation<Record<string, unknown>>("tasks.create");
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -77,8 +77,12 @@ export function CreateTaskDialog({
         status: defaultStatus,
       });
 
+      toast.success("Task created");
       resetForm();
       onOpenChange(false);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to create task";
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

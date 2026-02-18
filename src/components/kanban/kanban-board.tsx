@@ -13,9 +13,9 @@ import {
   type DragEndEvent,
   type DragOverEvent,
 } from "@dnd-kit/core";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
+import { useAuthMutation } from "@/lib/use-auth-mutation";
 import { COLUMNS, type TaskStatus } from "@/lib/columns";
 import { KanbanColumn } from "./kanban-column";
 import { TaskCard } from "./task-card";
@@ -42,8 +42,8 @@ export function KanbanBoard({
   const [activeTask, setActiveTask] = useState<Doc<"tasks"> | null>(null);
   const [overColumnId, setOverColumnId] = useState<string | null>(null);
 
-  const moveToColumn = useMutation(api.tasks.moveToColumn);
-  const reorder = useMutation(api.tasks.reorder);
+  const moveToColumn = useAuthMutation<Record<string, unknown>>("tasks.moveToColumn");
+  const reorder = useAuthMutation<Record<string, unknown>>("tasks.reorder");
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -123,18 +123,28 @@ export function KanbanBoard({
         : targetTasks.length;
 
       if (activeIndex !== overIndex && overIndex >= 0) {
-        await reorder({ id: activeId, position: overIndex });
+        try {
+          await reorder({ id: activeId, position: overIndex });
+        } catch (err) {
+          const message = err instanceof Error ? err.message : "Reorder failed";
+          toast.error(message);
+        }
       }
     } else {
       const overIndex = overData?.type === "task"
         ? targetTasks.findIndex((t) => t._id === over.id)
         : targetTasks.length;
 
-      await moveToColumn({
-        id: activeId,
-        status: targetColumn,
-        position: Math.max(0, overIndex),
-      });
+      try {
+        await moveToColumn({
+          id: activeId,
+          status: targetColumn,
+          position: Math.max(0, overIndex),
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Move failed";
+        toast.error(message);
+      }
     }
   }
 

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
+import { useAuthMutation } from "@/lib/use-auth-mutation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,7 +50,7 @@ export function SubtaskList({
   const [assignee, setAssignee] = useState<"dan" | "dali">("dali");
   const [isCreating, setIsCreating] = useState(false);
 
-  const createTask = useMutation(api.tasks.create);
+  const createTask = useAuthMutation<Record<string, unknown>>("tasks.create");
 
   const doneCount = subtasks.filter((s) => s.status === "done").length;
   const totalCount = subtasks.length;
@@ -69,6 +69,10 @@ export function SubtaskList({
       });
       setTitle("");
       setShowForm(false);
+      toast.success("Subtask added");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to add subtask";
+      toast.error(message);
     } finally {
       setIsCreating(false);
     }
