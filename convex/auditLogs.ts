@@ -1,7 +1,14 @@
 import { v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
+import { query, internalMutation } from "./_generated/server";
 
-export const create = mutation({
+// ─── Internal write mutations (SEC-003 extension) ─────────────────────────────
+//
+// auditLogs.create was especially dangerous as a public mutation — anyone with
+// the Convex URL could insert fake audit log entries, poisoning the audit trail.
+// Converted to internalMutation only. Audit entries are created internally by
+// tasks.ts mutations (which are themselves now internal).
+
+export const create = internalMutation({
   args: {
     taskId: v.id("tasks"),
     actor: v.union(v.literal("dan"), v.literal("dali"), v.literal("system")),
@@ -25,6 +32,7 @@ export const create = mutation({
   },
 });
 
+// Alias kept for agent compatibility — same implementation
 export const createInternal = internalMutation({
   args: {
     taskId: v.id("tasks"),
@@ -48,6 +56,8 @@ export const createInternal = internalMutation({
     });
   },
 });
+
+// ─── Public queries ────────────────────────────────────────────────────────────
 
 export const getByTask = query({
   args: { taskId: v.id("tasks") },

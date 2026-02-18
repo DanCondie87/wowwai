@@ -497,6 +497,95 @@ http.route({
   }),
 });
 
+// --- Authenticated Mutations Endpoint (SEC-003 extension) ---
+//
+// Batch endpoint for all protected task/project write mutations.
+// Called by the Next.js /api/mutations route (session-verified) with AGENT_SECRET.
+// The public task/project mutations were removed to prevent unauthenticated writes
+// by anyone who has the Convex URL (which is in the browser bundle).
+//
+// Supported mutations:
+//   tasks.create, tasks.update, tasks.moveToColumn, tasks.reorder
+//   projects.create, projects.update, projects.archive
+
+http.route({
+  path: "/mutations",
+  method: "OPTIONS",
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get("Origin")),
+    });
+  }),
+});
+
+http.route({
+  path: "/mutations",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get("Origin");
+    if (!(await verifySecret(request))) return unauthorized(origin);
+
+    let body: { mutation: string; args: Record<string, unknown> };
+    try {
+      body = await request.json();
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      });
+    }
+
+    const { mutation: mutationName, args } = body;
+
+    try {
+      let result: unknown;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const a = args as any;
+      switch (mutationName) {
+        case "tasks.create":
+          result = await ctx.runMutation(internal.tasks.create, a);
+          break;
+        case "tasks.update":
+          result = await ctx.runMutation(internal.tasks.update, a);
+          break;
+        case "tasks.moveToColumn":
+          result = await ctx.runMutation(internal.tasks.moveToColumn, a);
+          break;
+        case "tasks.reorder":
+          result = await ctx.runMutation(internal.tasks.reorder, a);
+          break;
+        case "projects.create":
+          result = await ctx.runMutation(internal.projects.create, a);
+          break;
+        case "projects.update":
+          result = await ctx.runMutation(internal.projects.update, a);
+          break;
+        case "projects.archive":
+          result = await ctx.runMutation(internal.projects.archive, a);
+          break;
+        default:
+          return new Response(JSON.stringify({ error: `Unknown mutation: ${mutationName}` }), {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+          });
+      }
+
+      return new Response(JSON.stringify({ result }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Mutation failed";
+      return new Response(JSON.stringify({ error: message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      });
+    }
+  }),
+});
+
 // --- Backup Endpoint (US-051) ---
 
 http.route({

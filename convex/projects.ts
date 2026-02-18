@@ -1,5 +1,10 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, query } from "./_generated/server";
+
+// ─── Internal write mutations (SEC-003 extension) ─────────────────────────────
+//
+// All write mutations are now internalMutation. External callers (browser) must
+// go through the authenticated Next.js API route /api/mutations.
 
 function slugify(name: string): string {
   return name
@@ -8,7 +13,7 @@ function slugify(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-export const create = mutation({
+export const create = internalMutation({
   args: {
     name: v.string(),
     color: v.string(),
@@ -27,7 +32,7 @@ export const create = mutation({
   },
 });
 
-export const update = mutation({
+export const update = internalMutation({
   args: {
     id: v.id("projects"),
     name: v.optional(v.string()),
@@ -51,12 +56,14 @@ export const update = mutation({
   },
 });
 
-export const archive = mutation({
+export const archive = internalMutation({
   args: { id: v.id("projects") },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.id, { status: "archived" as const });
   },
 });
+
+// ─── Public queries ────────────────────────────────────────────────────────────
 
 export const getAll = query({
   args: {},

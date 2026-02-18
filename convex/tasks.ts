@@ -1,7 +1,16 @@
 import { v } from "convex/values";
 import { mutation, query, internalQuery, internalMutation } from "./_generated/server";
 
-export const create = mutation({
+// ─── Internal write mutations (SEC-003 extension) ─────────────────────────────
+//
+// All write mutations are now internalMutation. External callers (browser) must
+// go through the authenticated Next.js API route /api/mutations, which verifies
+// the session cookie and forwards the request to the Convex /mutations HTTP action.
+//
+// Do NOT change these back to `mutation` — that would re-expose them to anyone
+// with the Convex URL (which is in the browser bundle as NEXT_PUBLIC_CONVEX_URL).
+
+export const create = internalMutation({
   args: {
     projectId: v.id("projects"),
     title: v.string(),
@@ -29,13 +38,23 @@ export const create = mutation({
     const project = await ctx.db.get(args.projectId);
     if (!project) throw new Error("Project not found");
 
-    // Count existing tasks in this project to generate cardId
+    // BUG FIX: Use max existing cardId number instead of count.
+    // The old approach (existingTasks.length + 1) caused collisions after deletion:
+    // e.g. 3 tasks exist, delete task 2, create new task → both get "-3" suffix.
     const existingTasks = await ctx.db
       .query("tasks")
       .withIndex("by_projectId", (q) => q.eq("projectId", args.projectId))
       .collect();
-    const nextNumber = existingTasks.length + 1;
-    const cardId = `${project.slug.toUpperCase()}-${nextNumber}`;
+
+    const prefix = project.slug.toUpperCase() + "-";
+    let maxNumber = 0;
+    for (const t of existingTasks) {
+      if (t.cardId.startsWith(prefix)) {
+        const n = parseInt(t.cardId.slice(prefix.length), 10);
+        if (!isNaN(n) && n > maxNumber) maxNumber = n;
+      }
+    }
+    const cardId = `${prefix}${maxNumber + 1}`;
 
     // Get max position in the target status column
     const status = args.status ?? "backlog";
@@ -75,7 +94,7 @@ export const create = mutation({
   },
 });
 
-export const update = mutation({
+export const update = internalMutation({
   args: {
     id: v.id("tasks"),
     title: v.optional(v.string()),
@@ -139,7 +158,7 @@ export const update = mutation({
   },
 });
 
-export const moveToColumn = mutation({
+export const moveToColumn = internalMutation({
   args: {
     id: v.id("tasks"),
     status: v.union(
@@ -181,7 +200,7 @@ export const moveToColumn = mutation({
   },
 });
 
-export const reorder = mutation({
+export const reorder = internalMutation({
   args: {
     id: v.id("tasks"),
     position: v.number(),
@@ -193,6 +212,8 @@ export const reorder = mutation({
     });
   },
 });
+
+// ─── Public queries ────────────────────────────────────────────────────────────
 
 export const getAll = query({
   args: {},
@@ -283,13 +304,16 @@ export const getById = query({
   },
 });
 
-// --- Internal functions for Agent API (US-025) ---
+// ─── Internal functions for Agent API (US-025) ────────────────────────────────
 
 export const getByCardId = internalQuery({
   args: { cardId: v.string() },
   handler: async (ctx, args) => {
-    const tasks = await ctx.db.query("tasks").collect();
-    return tasks.find((t) => t.cardId === args.cardId) ?? null;
+    // Fix: use by_cardId index instead of full table scan (N+1 prevention)
+    return await ctx.db
+      .query("tasks")
+      .withIndex("by_cardId", (q) => q.eq("cardId", args.cardId))
+      .first() ?? null;
   },
 });
 

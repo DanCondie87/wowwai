@@ -71,6 +71,7 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_assignee", ["assignee"])
     .index("by_parentTaskId", ["parentTaskId"])
+    .index("by_cardId", ["cardId"])
     .searchIndex("search_title", {
       searchField: "title",
       filterFields: ["projectId", "status"],

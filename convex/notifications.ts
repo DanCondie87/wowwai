@@ -5,17 +5,35 @@ import { internalMutation, internalQuery } from "./_generated/server";
  * US-043: Blocker Notification Trigger
  *
  * Scheduled function that checks for newly blocked tasks and triggers notifications.
- * Respects quiet hours (23:00-08:00 AEST).
+ * Respects quiet hours (23:00-08:00 AEST/AEDT).
  */
 
-// AEST is UTC+10
-const AEST_OFFSET_HOURS = 10;
+/**
+ * DST-safe hour for Australia/Sydney.
+ *
+ * The old approach used a hard-coded AEST_OFFSET_HOURS = 10, which was wrong
+ * during AEDT (daylight saving, UTC+11 from Oct to Apr). This caused quiet-hour
+ * calculations to be off by 1 hour for ~6 months per year.
+ *
+ * Fix: use Intl.DateTimeFormat to extract the actual local hour in Sydney time,
+ * which the JS engine resolves correctly including DST transitions.
+ */
+function getSydneyHour(): number {
+  const formatter = new Intl.DateTimeFormat("en-AU", {
+    timeZone: "Australia/Sydney",
+    hour: "numeric",
+    hour12: false,
+  });
+  // formatToParts returns e.g. [{ type: "hour", value: "14" }]
+  const parts = formatter.formatToParts(new Date());
+  const hourPart = parts.find((p) => p.type === "hour");
+  return hourPart ? parseInt(hourPart.value, 10) : new Date().getUTCHours();
+}
 
 function isQuietHours(): boolean {
-  const now = new Date();
-  const aestHour = (now.getUTCHours() + AEST_OFFSET_HOURS) % 24;
-  // Quiet hours: 23:00-08:00 AEST
-  return aestHour >= 23 || aestHour < 8;
+  const sydneyHour = getSydneyHour();
+  // Quiet hours: 23:00-08:00 Australia/Sydney (handles both AEST UTC+10 and AEDT UTC+11)
+  return sydneyHour >= 23 || sydneyHour < 8;
 }
 
 export const checkBlockedTasks = internalQuery({
