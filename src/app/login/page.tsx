@@ -29,8 +29,9 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        router.push("/board");
-        router.refresh();
+        // Use window.location for hard navigation to ensure cookie is applied
+        window.location.href = "/board";
+        return;
       } else {
         setError(data.error || "Login failed");
         setPassword("");
