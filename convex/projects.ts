@@ -27,6 +27,7 @@ export const create = internalMutation({
       color: args.color,
       description: args.description,
       status: "active",
+      taskCounter: 0,
       createdAt: Date.now(),
     });
   },

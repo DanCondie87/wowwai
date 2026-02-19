@@ -29,6 +29,7 @@ async function createTestProject(t: ReturnType<typeof convexTest>) {
       description: "A project for testing",
       status: "active",
       color: "#0ea5e9",
+      taskCounter: 0,
       createdAt: Date.now(),
     });
   });
@@ -119,6 +120,7 @@ describe("cardId generation", () => {
         description: undefined,
         status: "active",
         color: "#ff6b6b",
+        taskCounter: 0,
         createdAt: Date.now(),
       });
     });
@@ -302,6 +304,7 @@ describe("task queries", () => {
         slug: "other",
         status: "active",
         color: "#aabbcc",
+        taskCounter: 0,
         createdAt: Date.now(),
       });
     });

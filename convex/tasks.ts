@@ -38,27 +38,20 @@ export const create = internalMutation({
     const project = await ctx.db.get(args.projectId);
     if (!project) throw new Error("Project not found");
 
-    // BUG FIX: Use max existing cardId number instead of count.
-    // The old approach (existingTasks.length + 1) caused collisions after deletion:
-    // e.g. 3 tasks exist, delete task 2, create new task → both get "-3" suffix.
-    const existingTasks = await ctx.db
-      .query("tasks")
-      .withIndex("by_projectId", (q) => q.eq("projectId", args.projectId))
-      .collect();
-
-    const prefix = project.slug.toUpperCase() + "-";
-    let maxNumber = 0;
-    for (const t of existingTasks) {
-      if (t.cardId.startsWith(prefix)) {
-        const n = parseInt(t.cardId.slice(prefix.length), 10);
-        if (!isNaN(n) && n > maxNumber) maxNumber = n;
-      }
-    }
-    const cardId = `${prefix}${maxNumber + 1}`;
+    // US-054: Atomic task counter on project record.
+    // Prevents cardId collisions after task deletion. The counter only increments,
+    // never reuses numbers, so cardIds are globally unique per project.
+    const nextNumber = (project.taskCounter ?? 0) + 1;
+    await ctx.db.patch(args.projectId, { taskCounter: nextNumber });
+    const cardId = `${project.slug.toUpperCase()}-${nextNumber}`;
 
     // Get max position in the target status column
     const status = args.status ?? "backlog";
-    const tasksInColumn = existingTasks.filter((t) => t.status === status);
+    const tasksInColumn = await ctx.db
+      .query("tasks")
+      .withIndex("by_projectId", (q) => q.eq("projectId", args.projectId))
+      .filter((q) => q.eq(q.field("status"), status))
+      .collect();
     const maxPosition =
       tasksInColumn.length > 0
         ? Math.max(...tasksInColumn.map((t) => t.position))

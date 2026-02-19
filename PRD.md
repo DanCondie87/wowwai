@@ -17,7 +17,7 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 
 - **Frontend:** Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui (Radix primitives)
 - **Backend:** Convex (real-time database + HTTP actions)
-- **Auth:** Clerk (single-user, session persistence on mobile)
+- **Auth:** Custom single-user password auth (SHA-256 + HMAC cookies)
 - **DnD:** dnd-kit
 - **UI Components:** shadcn/ui — Dialog, Sheet, Command, DropdownMenu, Accordion, Button, Input, Badge, Card, Tooltip, etc.
 - **Markdown:** react-markdown + rehype-sanitize
@@ -59,19 +59,19 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 - [x] Typecheck passes
 - [ ] Verify both themes render correctly in browser
 
-### US-003: Clerk Authentication
+### US-003: Custom Authentication
 **Description:** As a user, I want to log in so that only I can access my data.
 
 **Acceptance Criteria:**
-- [x] Clerk provider wraps the app in `app/layout.tsx`
-- [x] Middleware protects all routes except `/sign-in` and `/sign-up`
-- [x] Sign-in page at `/sign-in` using Clerk's `<SignIn />` component
-- [x] User button (avatar + sign out) in the app header
-- [x] Convex client authenticated via Clerk (uses `ConvexProviderWithClerk`)
-- [x] Unauthenticated users redirected to sign-in
-- [ ] Environment variables: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` in `.env.local`
+- [x] ~~Clerk provider wraps the app in `app/layout.tsx`~~ **REPLACED:** Custom auth provider with session cookie validation
+- [x] Middleware protects all routes except `/login` using timing-safe session token comparison
+- [x] ~~Sign-in page at `/sign-in` using Clerk's `<SignIn />` component~~ **REPLACED:** Login page at `/login` with password-only form
+- [x] ~~User button (avatar + sign out) in the app header~~ **REPLACED:** Sign out button clears HMAC-signed session cookie
+- [x] ~~Convex client authenticated via Clerk (uses `ConvexProviderWithClerk`)~~ **REPLACED:** Convex HTTP actions validate `x-agent-secret` header
+- [x] Unauthenticated users redirected to login
+- [x] ~~Environment variables: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` in `.env.local`~~ **REPLACED:** `AUTH_SECRET`, `AUTH_PASSWORD_HASH` in Vercel env vars
 - [x] Typecheck passes
-- [ ] Verify sign-in flow works in browser
+- [x] Verify sign-in flow works in browser (password-based auth with SHA-256 + HMAC cookies)
 
 ### US-004: Convex Schema — Projects & Ideas
 **Description:** As a developer, I want the database schema for projects and ideas so that we can store and query them.
@@ -737,6 +737,163 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 
 ---
 
+### PRODUCTION READINESS
+
+---
+
+### US-054: Fix cardId Collision Bug
+**Description:** As a developer, I want cardId generation to be collision-resistant even after task deletion so that task identity remains unique.
+
+**Acceptance Criteria:**
+- [ ] Add `taskCounter: v.number()` field to projects schema (initialize to 0 on project creation)
+- [ ] Replace `existingTasks.length + 1` logic in `convex/tasks.ts` with atomic counter increment
+- [ ] cardId generation: read `project.taskCounter`, increment it, patch project record, use incremented value
+- [ ] Test scenario: create WOWWAI-1, WOWWAI-2, WOWWAI-3 → delete WOWWAI-2 → create new task → verify it gets WOWWAI-4 (not WOWWAI-3)
+- [ ] Migration: backfill `taskCounter` on existing projects to max(existing cardId numbers)
+- [ ] Typecheck passes
+
+### US-055: Sync Agent Setup & Configuration
+**Description:** As a developer, I want the sync-agent configured and running so that local files sync with Convex in both directions.
+
+**Acceptance Criteria:**
+- [ ] Create `sync-agent/.env` from `.env.example` (set `CONVEX_SITE_URL` and `AGENT_SECRET`)
+- [ ] Install pm2 globally (`npm install -g pm2`)
+- [ ] Update `sync-agent/config.json` watchPaths to include `~/clawd/workflows`, `~/clawd/TASKS.md`, `~/clawd` (in addition to project-local paths)
+- [ ] Install sync-agent dependencies (`npm install` in sync-agent directory)
+- [ ] Start sync-agent via `npm run start` (pm2)
+- [ ] Verify agent logs file changes: edit a watched file → see log entry within 5 seconds
+- [ ] Configure pm2 startup (save process list, enable auto-start on system boot)
+- [ ] Test bidirectional sync: edit file locally → appears in Convex `fileVersions`; edit in UI → writes to local disk
+
+### US-056: Real Data Migration
+**Description:** As a user, I want my actual TASKS.md data migrated to WOWWAI so that the board shows real work instead of demo data.
+
+**Acceptance Criteria:**
+- [ ] Audit current Convex data (projects, tasks tables) — identify seed/demo data
+- [ ] Clear seed data if it conflicts with real data (delete via Convex dashboard or script)
+- [ ] Run migration script in dry-run mode: `npx ts-node scripts/migrate-tasks.ts ~/clawd/TASKS.md --dry-run`
+- [ ] Review dry-run output: verify projects and tasks match expected structure
+- [ ] Run actual migration: `npx ts-node scripts/migrate-tasks.ts ~/clawd/TASKS.md`
+- [ ] Verify in UI: real projects and tasks appear on the board
+- [ ] Verify cardIds match expected format (PROJECT-SLUG-NUMBER)
+- [ ] Document migration process in README
+
+### US-057: Workflow Document Content Loading
+**Description:** As a user, I want workflow document references to show actual file content so that I can view and edit workflow guides.
+
+**Acceptance Criteria:**
+- [ ] Verify sync-agent is running (US-055 completed)
+- [ ] Wait 5-10 seconds for initial file scan after sync-agent starts
+- [ ] Open workflow detail page (`/workflows/[id]`) → expand a step → click "View" on a document reference
+- [ ] Document should show content (not "Not synced" badge)
+- [ ] Check Convex dashboard `fileVersions` table: verify entries exist for workflow files
+- [ ] If "Not synced" persists: check sync-agent logs for errors, verify file paths in `workflowSteps.references[].filePath` match watched paths
+- [ ] Fix seed data paths if needed: update `convex/seed.ts` workflow references to use correct relative paths
+- [ ] Test document editing: edit in UI → save → verify file written to local disk
+
+### US-058: Nonce-Based CSP
+**Description:** As a developer, I want a nonce-based Content Security Policy so that XSS protection is hardened without `'unsafe-inline'`.
+
+**Acceptance Criteria:**
+- [ ] Add nonce generation to `src/middleware.ts`: `crypto.randomUUID()` on every request
+- [ ] Pass nonce via response headers (`x-nonce` or similar)
+- [ ] Update `src/app/layout.tsx`: read nonce from `headers()`, inject into `<Script>` tags via `nonce` prop
+- [ ] Move CSP header from `next.config.ts` to middleware (dynamic header with `nonce-{value}` in `script-src`)
+- [ ] CSP header: `script-src 'self' 'nonce-{value}' 'strict-dynamic'` (remove `'unsafe-inline'`)
+- [ ] Test: verify app loads without CSP violations in browser console
+- [ ] Test: verify Next.js hydration works (no white screen or React errors)
+- [ ] Fallback: if Next.js inline scripts still break, document the issue and keep `'unsafe-inline'` as acceptable for single-user app
+
+### US-059: Agent Integration Pattern
+**Description:** As a developer, I want a documented pattern for agents to update WOWWAI tasks so that Dali can report progress in real-time.
+
+**Acceptance Criteria:**
+- [ ] Create `~/clawd/lib/wowwai-client.ts` helper with functions: `updateWowwaiTask(cardId, updates)`, `logWowwaiActivity(cardId, action, comment, model)`
+- [ ] Helper reads `WOWWAI_CONVEX_URL` and `WOWWAI_AGENT_SECRET` from environment
+- [ ] Helper authenticates via `x-agent-secret` header on all requests
+- [ ] Test helper from command line: manually update a task status
+- [ ] Document subagent update pattern in `~/clawd/AGENTS.md` or `~/clawd/workflows/` — when to update, how to generate session summaries
+- [ ] Example integration: update one existing subagent workflow (e.g., PRD completion) to call `updateWowwaiTask` on completion
+- [ ] Verify: subagent completes work → task status updates in WOWWAI UI within 5 seconds
+
+### US-060: Bidirectional TASKS.md Sync
+**Description:** As a user, I want changes in TASKS.md to sync to WOWWAI and vice versa so that both systems stay in sync.
+
+**Acceptance Criteria:**
+- [ ] **TASKS.md → WOWWAI:** Sync-agent watches `~/clawd/TASKS.md` for changes
+- [ ] On TASKS.md change: parse file, detect new unchecked items (`- [ ] Task title`)
+- [ ] For each new task: call agent API to create task in WOWWAI (infer project from section header)
+- [ ] **WOWWAI → TASKS.md:** Convex cron job (every 5 minutes) generates TASKS.md from current task state
+- [ ] Generated TASKS.md format: sections for "🎯 Today's Focus", "🔥 Active Projects", checkboxes reflect WOWWAI status (`[x]` for done, `[ ]` for open)
+- [ ] Append WOWWAI cardId as HTML comment: `<!-- WOWWAI-42 -->`
+- [ ] Sync-agent writes generated TASKS.md to `~/clawd/TASKS.md` (from `fileSyncQueue`)
+- [ ] Test conflict scenario: simultaneous edit in TASKS.md and WOWWAI → last-write-wins or detect conflict
+- [ ] Document sync behavior in README: "TASKS.md is the inbox for new tasks, WOWWAI is primary for status updates"
+
+### US-061: OpenClaw Workflow Awareness
+**Description:** As Dali, I want to know WOWWAI exists and how to use it so that I can integrate it into daily workflow.
+
+**Acceptance Criteria:**
+- [ ] Add WOWWAI section to `~/clawd/AGENTS.md` or `~/clawd/TOOLS.md`: web UI URL, what it's for, when to use it
+- [ ] Document: "All tasks tracked with cardIds (e.g., WOWWAI-42). When working on a tracked task, update status via wowwai-client.ts helper."
+- [ ] Add WOWWAI check to `~/clawd/HEARTBEAT.md`: "Check WOWWAI board for blocked tasks, stale tasks >3 days"
+- [ ] Daily planning integration (8am ping): Dali reads WOWWAI board state, recommends focus based on staleness/blockers/priority
+- [ ] Test: trigger heartbeat check → Dali should mention WOWWAI state (e.g., "WOWWAI shows 2 blocked tasks")
+- [ ] Update `~/clawd/memory/` with WOWWAI integration notes
+
+### US-062: Notification Cron Jobs
+**Description:** As a user, I want to be notified when tasks need attention so that I can unblock work proactively.
+
+**Acceptance Criteria:**
+- [ ] Create `convex/crons.ts` with cron job definitions
+- [ ] Cron job: "Check blocked tasks" (every 30 minutes) → query tasks with non-empty `blockedBy`, status != "done"
+- [ ] If blocked task found: call `internal.notifications.notifyDan` with message "WOWWAI: {cardId} is blocked — needs your input"
+- [ ] Respect quiet hours: no notifications between 23:00–08:00 AEST
+- [ ] Cron job: "Task assignment notification" → trigger when task assignee changes to "dan" (via Convex trigger or mutation check)
+- [ ] Cron job: "Stale task reminder" (daily at 9am) → query tasks in "in-progress" or "review" with `lastTouchedAt > 3 days ago`
+- [ ] Test notifications: artificially create a blocked task → verify WhatsApp message received within 30 minutes
+- [ ] Verify cron jobs are scheduled in Convex dashboard
+
+### US-063: Agent Presence Indicator Wiring
+**Description:** As a user, I want to see live indicators when Dali is working on a task so that I know work is in progress.
+
+**Acceptance Criteria:**
+- [ ] Add `/agent/heartbeat` HTTP action endpoint (POST): accepts `{ cardId, model, currentAction }`
+- [ ] Endpoint updates `agentActivity` table: set `status: "working"`, `currentAction`, `lastHeartbeat: Date.now()`
+- [ ] Subagent heartbeat pattern: when subagent starts work → call heartbeat with `currentAction: "Starting work"`
+- [ ] Every 30 seconds during work: call heartbeat with progress update (`currentAction: "Step 2/5: Testing"`)
+- [ ] On completion: call heartbeat with `status: "idle"`
+- [ ] Convex cron job (every 5 minutes): auto-expire stale activity (`lastHeartbeat > 30 minutes ago` → set status to "idle")
+- [ ] UI: verify pulsing 🦈 indicator appears on task card when `agentActivity.status === "working"`
+- [ ] Hover/tap indicator: shows tooltip with model, currentAction, time started
+
+### US-064: Error Boundaries & Loading States
+**Description:** As a user, I want the app to handle errors gracefully and show skeleton loading states so that the UI never breaks.
+
+**Acceptance Criteria:**
+- [ ] Create `<ErrorBoundary>` component (React error boundary) with fallback UI: "Something went wrong. [Retry]" button
+- [ ] Wrap `(app)/layout.tsx` with ErrorBoundary
+- [ ] Wrap `<KanbanBoard>` component with ErrorBoundary (scoped error handling)
+- [ ] Wrap `<WorkflowDetail>` component with ErrorBoundary
+- [ ] Test: simulate Convex query failure (disconnect internet) → verify error boundary shows fallback, not white screen
+- [ ] Replace "Loading..." text with shadcn Skeleton components: board columns, task cards, workflow steps
+- [ ] Test: verify skeleton loading shows during initial data fetch on slow connection
+
+### US-065: Accessibility Quick Wins
+**Description:** As a user, I want the app to be keyboard-accessible and screen-reader-friendly so that it's usable by everyone.
+
+**Acceptance Criteria:**
+- [ ] **Login form:** Add `<label htmlFor="password">Password</label>` to password input (FRONT-1)
+- [ ] **Sidebar close button:** Add `aria-label="Close sidebar"` to X button (FRONT-2)
+- [ ] **Priority dots:** Add `aria-label` to priority indicators (e.g., `aria-label="High priority"`) (FRONT-7)
+- [ ] **Staleness dots:** Add `aria-label` to staleness indicators (e.g., `aria-label="Stale for 3 days"`)
+- [ ] **Drag-and-drop:** Add `KeyboardSensor` to dnd-kit config for keyboard-only DnD (FRONT-5)
+- [ ] **Create task selects:** Add proper labels to project, assignee, priority selects (FRONT-6)
+- [ ] Test: navigate entire app with keyboard only (Tab, Enter, arrow keys)
+- [ ] Test: verify screen reader announces all interactive elements correctly
+
+---
+
 ## Non-Goals
 
 - Native mobile app (we use responsive web, not React Native)
@@ -762,3 +919,4 @@ WOWWAI is a personal project management + workflow control centre for Dan and hi
 | Date | Change | Author |
 |------|--------|--------|
 | 2026-02-17 | Initial PRD — full feature set across all phases | Dali 🦈 |
+| 2026-02-19 | Added production readiness stories US-054 to US-065, updated auth references (Clerk → custom password auth) | Dali 🦈 |

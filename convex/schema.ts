@@ -13,6 +13,7 @@ export default defineSchema({
     description: v.optional(v.string()),
     status: v.union(v.literal("active"), v.literal("archived")),
     color: v.string(),
+    taskCounter: v.optional(v.number()),
     createdAt: v.number(),
   }).index("by_status", ["status"]),
 
