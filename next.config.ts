@@ -41,15 +41,14 @@ const securityHeaders = [
     value: "1; mode=block",
   },
   {
-    // 'unsafe-inline' removed from script-src (SEC-004).
-    // 'strict-dynamic' allows Next.js to dynamically load its chunk scripts
-    // while blocking unauthorized inline scripts.
-    // 'self' provides graceful fallback for older browsers without strict-dynamic.
+    // script-src: 'unsafe-inline' is required for Next.js hydration inline scripts.
+    // Without nonce-based CSP (which requires per-request middleware), 'strict-dynamic'
+    // alone blocks ALL scripts including Next.js bootstrap. Tracked as future improvement.
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
       "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud",
-      "script-src 'self' 'strict-dynamic'",
+      "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'", // Tailwind/shadcn require inline styles; acceptable risk
       "img-src 'self' data: https:",
       "font-src 'self' data:",
