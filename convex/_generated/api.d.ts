@@ -11,6 +11,7 @@
 import type * as agentActivity from "../agentActivity.js";
 import type * as analytics from "../analytics.js";
 import type * as auditLogs from "../auditLogs.js";
+import type * as crons from "../crons.js";
 import type * as export_ from "../export.js";
 import type * as fileSyncQueue from "../fileSyncQueue.js";
 import type * as fileVersions from "../fileVersions.js";
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   agentActivity: typeof agentActivity;
   analytics: typeof analytics;
   auditLogs: typeof auditLogs;
+  crons: typeof crons;
   export: typeof export_;
   fileSyncQueue: typeof fileSyncQueue;
   fileVersions: typeof fileVersions;
