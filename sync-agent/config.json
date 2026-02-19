@@ -2,7 +2,12 @@
   "watchPaths": [
     "../workflows",
     "../docs",
-    "../../../clawd/workflows"
+    "../../../clawd/workflows",
+    "../../../clawd/templates"
+  ],
+  "watchFiles": [
+    "../CLAUDE.md",
+    "../PRD.md"
   ],
   "allowedExtensions": [".md", ".json", ".yaml", ".txt"],
   "pollIntervalMs": 5000,

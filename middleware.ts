@@ -12,6 +12,30 @@ const PUBLIC_ROUTE_PREFIXES = [
   "/api/auth/logout",
 ];
 
+/**
+ * Generate CSP header with nonce for script-src.
+ * 
+ * US-058: Nonce-based CSP replaces 'unsafe-inline' for script-src.
+ * - Nonce allows Next.js hydration scripts while blocking arbitrary inline scripts
+ * - 'strict-dynamic' trusts scripts loaded by already-trusted scripts (Next.js chunks)
+ * - 'unsafe-eval' required in dev for React error stack reconstruction
+ */
+function generateCSP(nonce: string): string {
+  const isDev = process.env.NODE_ENV === "development";
+
+  return [
+    "default-src 'self'",
+    "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud",
+    `script-src 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""}`,
+    "style-src 'self' 'unsafe-inline'", // Tailwind/shadcn require inline styles
+    "img-src 'self' data: https:",
+    "font-src 'self' data:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; ");
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -25,7 +49,12 @@ export async function middleware(request: NextRequest) {
 
   // Allow public auth routes (strict prefix check — no partial matches)
   if (PUBLIC_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix + "/"))) {
-    return NextResponse.next();
+    // Generate nonce for public routes too
+    const nonce = crypto.randomUUID();
+    const response = NextResponse.next();
+    response.headers.set("x-nonce", nonce);
+    response.headers.set("Content-Security-Policy", generateCSP(nonce));
+    return response;
   }
 
   // Allow Next.js internals (handled by matcher config, but belt-and-suspenders)
@@ -48,18 +77,31 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get(AUTH_COOKIE)?.value;
 
   if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // Generate nonce for login redirect too
+    const nonce = crypto.randomUUID();
+    const response = NextResponse.redirect(new URL("/login", request.url));
+    response.headers.set("x-nonce", nonce);
+    response.headers.set("Content-Security-Policy", generateCSP(nonce));
+    return response;
   }
 
   const valid = await verifySessionToken(token);
   if (!valid) {
     // Clear invalid cookie and redirect
+    const nonce = crypto.randomUUID();
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.set(AUTH_COOKIE, "", { maxAge: 0, path: "/" });
+    response.headers.set("x-nonce", nonce);
+    response.headers.set("Content-Security-Policy", generateCSP(nonce));
     return response;
   }
 
-  return NextResponse.next();
+  // Generate nonce for authenticated requests
+  const nonce = crypto.randomUUID();
+  const response = NextResponse.next();
+  response.headers.set("x-nonce", nonce);
+  response.headers.set("Content-Security-Policy", generateCSP(nonce));
+  return response;
 }
 
 export const config = {

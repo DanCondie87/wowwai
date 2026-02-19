@@ -3,24 +3,19 @@ import type { NextConfig } from "next";
 /**
  * Security Headers
  *
- * SEC-004: CSP hardened — 'unsafe-inline' removed from script-src.
+ * US-058: Nonce-based CSP implemented in middleware.ts.
  *
- * script-src now uses 'strict-dynamic', which:
- *   - Trusts scripts loaded by already-trusted scripts (Next.js runtime → chunks)
- *   - Overrides 'self' and other allowlist source entries for scripts
- *   - Does NOT allow arbitrary inline scripts (removes unsafe-inline effectively)
- *   - 'self' is kept for browsers that don't support strict-dynamic (graceful fallback)
+ * CSP is now dynamically generated per-request in middleware with a unique nonce,
+ * replacing the static 'unsafe-inline' approach. This provides stronger XSS protection
+ * while allowing Next.js hydration scripts to execute.
  *
- * Note: Full nonce-based CSP would be stronger but requires middleware to generate
- * nonces per-request and thread them through layout.tsx via `headers()`. That is
- * tracked as a follow-up improvement. 'strict-dynamic' provides meaningful
- * protection against XSS without requiring per-request nonce infrastructure.
+ * The CSP header is set in middleware.ts and includes:
+ *   - script-src 'nonce-{random}' 'strict-dynamic' — allows Next.js scripts via nonce
+ *   - 'strict-dynamic' trusts scripts loaded by already-trusted scripts (Next.js chunks)
+ *   - connect-src includes Convex endpoints (wss:// and https://)
+ *   - 'unsafe-eval' in dev mode only (for React error stack reconstruction)
  *
- * Convex connections:
- *   - connect-src includes wss://*.convex.cloud for WebSocket subscriptions
- *   - connect-src includes https://*.convex.site for Convex HTTP actions
- *
- * Additional headers added (SEC-004):
+ * Other security headers remain here as static config:
  *   - Referrer-Policy: strict-origin-when-cross-origin
  *   - Permissions-Policy: restricts camera, microphone, geolocation
  *   - Strict-Transport-Security (HSTS): 1 year with subdomains
@@ -39,23 +34,6 @@ const securityHeaders = [
   {
     key: "X-XSS-Protection",
     value: "1; mode=block",
-  },
-  {
-    // script-src: 'unsafe-inline' is required for Next.js hydration inline scripts.
-    // Without nonce-based CSP (which requires per-request middleware), 'strict-dynamic'
-    // alone blocks ALL scripts including Next.js bootstrap. Tracked as future improvement.
-    key: "Content-Security-Policy",
-    value: [
-      "default-src 'self'",
-      "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline'", // Tailwind/shadcn require inline styles; acceptable risk
-      "img-src 'self' data: https:",
-      "font-src 'self' data:",
-      "frame-ancestors 'none'", // belt-and-suspenders with X-Frame-Options: DENY
-      "base-uri 'self'",        // prevent base tag injection
-      "form-action 'self'",     // prevent form exfiltration to external origins
-    ].join("; "),
   },
   {
     // Prevent Referer header from leaking full URL to cross-origin requests
