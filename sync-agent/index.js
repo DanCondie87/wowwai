@@ -201,6 +201,15 @@ pollSyncQueue();
 // Initial heartbeat
 logHeartbeat();
 
+// Catch unhandled errors to prevent crash
+process.on("unhandledRejection", (reason) => {
+  console.error(`[${timestamp()}] [sync-agent] Unhandled rejection:`, reason);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error(`[${timestamp()}] [sync-agent] Uncaught exception:`, error.message);
+});
+
 // Graceful shutdown
 process.on("SIGINT", () => {
   console.log(`[${timestamp()}] [sync-agent] Shutting down...`);

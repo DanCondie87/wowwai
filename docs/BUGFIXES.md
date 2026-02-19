@@ -135,3 +135,9 @@ Added two error boundary components:
 - Wraps the `ConvexClientProvider` subtree
 
 Both boundaries use shadcn/ui-compatible styling with appropriate icons.
+
+<!-- sync test 2 -->
+
+<!-- test 3 -->
+
+<!-- test 4 -->

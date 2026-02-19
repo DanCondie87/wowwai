@@ -1,7 +1,8 @@
 {
   "watchPaths": [
     "../workflows",
-    "../docs"
+    "../docs",
+    "../../../clawd/workflows"
   ],
   "allowedExtensions": [".md", ".json", ".yaml", ".txt"],
   "pollIntervalMs": 5000,

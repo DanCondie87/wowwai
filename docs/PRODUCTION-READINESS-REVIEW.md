@@ -849,3 +849,5 @@ WOWWAI is **production-ready** when:
 4. GAP-5 (agent integration pattern) — 2 days, makes it "live"
 
 **The rest is polish and bidirectional sync — nice to have but not blocking for a functional MVP.**
+
+<!-- sync test -->
