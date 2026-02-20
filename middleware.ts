@@ -26,7 +26,7 @@ function generateCSP(nonce: string): string {
   return [
     "default-src 'self'",
     "connect-src 'self' https://*.convex.cloud https://*.convex.site wss://*.convex.cloud",
-    `script-src 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval'`,
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
     "style-src 'self' 'unsafe-inline'", // Tailwind/shadcn require inline styles
     "img-src 'self' data: https:",
     "font-src 'self' data:",
